@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* 亮色系主题变量 */
+:root {
+  /* 主背景渐变 */
+  --background-light-start: #F5F7FA;
+  --background-light-end: #FFFFFF;
+  
+  /* 文字颜色 */
+  --foreground: #111111;
+  --foreground-title: #000000;
+  
+  /* 卡片毛玻璃底色 */
+  --card-bg: rgba(255, 255, 255, 0.70);
+  
+  /* 边框颜色 */
+  --border-color: rgba(0, 0, 0, 0.05);
+  
+  /* 渐变色系 - 海雾蓝 */
+  --gradient-blue-start: #4E8CEB;
+  --gradient-blue-end: #64C7FF;
+  
+  /* 渐变色系 - 柔粉金 */
+  --gradient-pink-start: #F6D2FF;
+  --gradient-pink-end: #FFE3D8;
+  
+  /* 渐变色系 - 薄荷绿 */
+  --gradient-mint-start: #8EEFC4;
+  --gradient-mint-end: #56D9A0;
+}
+
+/* 暗色系主题变量 */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    /* 主背景渐变 */
+    --background-dark-start: #0F1115;
+    --background-dark-end: #181C24;
+    
+    /* 文字颜色 */
+    --foreground: #E6E6E6;
+    --foreground-title: #FFFFFF;
+    
+    /* 卡片毛玻璃底色 */
+    --card-bg: rgba(255, 255, 255, 0.10);
+    
+    /* 边框颜色 */
+    --border-color: rgba(255, 255, 255, 0.20);
+    
+    /* 渐变色系 - 海雾蓝-暗 */
+    --gradient-blue-start: #3B6BEC;
+    --gradient-blue-end: #4AC6FF;
+    
+    /* 渐变色系 - 柔粉金-暗 */
+    --gradient-pink-start: #E8C0FF;
+    --gradient-pink-end: #FFD1C4;
+    
+    /* 渐变色系 - 薄荷绿-暗 */
+    --gradient-mint-start: #6DD9AE;
+    --gradient-mint-end: #40C894;
+  }
+}
+
+/* 手动暗色模式 */
+:root.dark {
+  /* 主背景渐变 */
+  --background-dark-start: #0F1115;
+  --background-dark-end: #181C24;
+  
+  /* 文字颜色 */
+  --foreground: #E6E6E6;
+  --foreground-title: #FFFFFF;
+  
+  /* 卡片毛玻璃底色 */
+  --card-bg: rgba(255, 255, 255, 0.10);
+  
+  /* 边框颜色 */
+  --border-color: rgba(255, 255, 255, 0.20);
+  
+  /* 渐变色系 - 海雾蓝-暗 */
+  --gradient-blue-start: #3B6BEC;
+  --gradient-blue-end: #4AC6FF;
+  
+  /* 渐变色系 - 柔粉金-暗 */
+  --gradient-pink-start: #E8C0FF;
+  --gradient-pink-end: #FFD1C4;
+  
+  /* 渐变色系 - 薄荷绿-暗 */
+  --gradient-mint-start: #6DD9AE;
+  --gradient-mint-end: #40C894;
+}
+
+@theme inline {
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+  
+  /* 自定义圆角 */
+  --radius-card: 16px;
+  
+  /* 自定义模糊 */
+  --blur-sm: 12px;
+  --blur-md: 16px;
+  --blur-lg: 20px;
+  
+  /* 自定义阴影 */
+  --shadow-card-light: 0 6px 20px rgba(0, 0, 0, 0.04);
+  --shadow-card-dark: 0 8px 32px rgba(0, 0, 0, 0.20);
+}
+
+body {
+  background: linear-gradient(135deg, var(--background-light-start), var(--background-light-end));
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  transition: background 300ms ease, color 300ms ease;
+  position: relative;
+}
+
+/* 背景网格点效果 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light) {
+    background: linear-gradient(135deg, var(--background-dark-start), var(--background-dark-end));
+  }
+  
+  body:not(.light)::before {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+}
+
+/* 手动暗色模式 */
+:root.dark body {
+  background: linear-gradient(135deg, var(--background-dark-start), var(--background-dark-end));
+}
+
+:root.dark body::before {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}

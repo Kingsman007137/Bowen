@@ -1,0 +1,232 @@
+/**
+ * 主题样式定义
+ * 包含毛玻璃效果、动画、公共样式等
+ */
+
+/* ========== 毛玻璃卡片效果 ========== */
+
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card-light);
+  transition: all 200ms ease-in-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    box-shadow: var(--shadow-card-dark);
+  }
+}
+
+/* 卡片悬浮效果 */
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-card:hover {
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.30);
+  }
+}
+
+/* ========== 渐变背景 ========== */
+
+.gradient-blue {
+  background: linear-gradient(
+    to bottom right,
+    var(--gradient-blue-start),
+    var(--gradient-blue-end)
+  );
+}
+
+.gradient-pink {
+  background: linear-gradient(
+    to bottom right,
+    var(--gradient-pink-start),
+    var(--gradient-pink-end)
+  );
+}
+
+.gradient-mint {
+  background: linear-gradient(
+    to bottom right,
+    var(--gradient-mint-start),
+    var(--gradient-mint-end)
+  );
+}
+
+/* ========== 动画效果 ========== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 300ms ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 200ms ease-out;
+}
+
+/* ========== React Flow 样式覆盖 ========== */
+
+/* 画布背景 */
+.react-flow__background {
+  background-color: transparent;
+}
+
+/* 连线样式 */
+.react-flow__edge-path {
+  stroke: var(--border-color);
+  stroke-width: 2;
+}
+
+/* 连线悬浮效果 */
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--foreground);
+  stroke-width: 3;
+}
+
+/* 控制按钮样式 - 优化大小和样式 */
+.react-flow__controls {
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card-light);
+  bottom: 24px !important;
+  left: 24px !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .react-flow__controls {
+    box-shadow: var(--shadow-card-dark);
+  }
+}
+
+:root.dark .react-flow__controls {
+  box-shadow: var(--shadow-card-dark);
+}
+
+.react-flow__controls-button {
+  background: transparent;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--foreground);
+  width: 48px;
+  height: 48px;
+  transition: all 200ms ease;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none;
+}
+
+.react-flow__controls-button svg {
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .react-flow__controls-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+:root.dark .react-flow__controls-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== Tiptap 编辑器样式 ========== */
+
+.tiptap {
+  outline: none;
+  min-height: 100px;
+}
+
+.tiptap p {
+  margin: 0.5em 0;
+}
+
+.tiptap p:first-child {
+  margin-top: 0;
+}
+
+.tiptap p:last-child {
+  margin-bottom: 0;
+}
+
+.tiptap img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0.5em 0;
+}
+
+/* ========== 滚动条样式 ========== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* ========== 通用工具类 ========== */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+
