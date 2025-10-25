@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玻文卡片笔记 - 原型图导航</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-500 to-purple-600 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center p-8 transition-colors duration-300">
+    <div class="absolute top-4 right-4">
+        <button onclick="toggleTheme()" class="p-3 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-colors">
+            <span class="material-symbols-outlined text-white text-2xl" id="themeIcon">light_mode</span>
+        </button>
+    </div>
+
+    <div class="w-full max-w-5xl">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-white mb-4">玻文卡片笔记</h1>
+            <p class="text-xl text-white/90">可交互原型图导航</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <a href="login.html" class="group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined text-primary text-4xl">login</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">登录页面</h2>
+                <p class="text-gray-600 dark:text-gray-400">用户登录界面，输入账号密码进入系统</p>
+            </a>
+
+            <a href="notebook-shelf.html" class="group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined text-primary text-4xl">auto_stories</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">笔记架页面</h2>
+                <p class="text-gray-600 dark:text-gray-400">展示所有笔记和文件夹，支持新建、删除、分类管理</p>
+            </a>
+
+            <a href="canvas.html" class="group bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+                <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined text-primary text-4xl">dashboard</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">画布编辑页面</h2>
+                <p class="text-gray-600 dark:text-gray-400">毛玻璃卡片的创建、编辑、连线和组织</p>
+            </a>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <h3 class="text-lg font-semibold text-white mb-3">设计特点</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-white/90 text-sm">
+                <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-xl">check_circle</span>
+                    <span>书架式笔记展示，带有遮挡效果</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-xl">check_circle</span>
+                    <span>毛玻璃效果仅用于卡片</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-xl">check_circle</span>
+                    <span>卡片编辑采用弹窗模式</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-xl">check_circle</span>
+                    <span>支持白天/黑夜模式切换</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-xl">check_circle</span>
+                    <span>简洁的平面图标设计</span>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-xl">check_circle</span>
+                    <span>现代化、简约的视觉风格</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-8">
+            <p class="text-white/70 text-sm">© 2025 玻文卡片笔记 - 产品原型图</p>
+        </div>
+    </div>
+
+    <script>
+        // 主题切换
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // 初始化主题
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('themeIcon').textContent = 'light_mode';
+        }
+    </script>
+</body>
+</html>

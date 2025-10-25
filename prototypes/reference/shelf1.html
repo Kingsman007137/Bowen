@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Card-based Notes App</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0A84FF",
+                        "background-light": "#F5F5F7",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <div class="flex h-screen w-full">
+        <!-- Sidebar -->
+        <div
+            class="flex flex-col h-full w-64 bg-background-light dark:bg-background-dark border-r border-gray-200 dark:border-gray-800">
+            <div class="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-800">
+                <h1 class="text-xl font-bold text-gray-800 dark:text-white">NotesApp</h1>
+            </div>
+            <div class="flex-1 p-4">
+                <div class="flex flex-col gap-4">
+                    <button
+                        class="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold">
+                        <span class="material-symbols-outlined mr-2">add</span>
+                        New Note
+                    </button>
+                    <button
+                        class="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-primary/20 text-primary dark:text-white text-sm font-bold">
+                        <span class="material-symbols-outlined mr-2">create_new_folder</span>
+                        New Folder
+                    </button>
+                </div>
+                <nav class="mt-8 flex flex-col gap-2">
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-white"
+                        href="#">
+                        <span class="material-symbols-outlined">description</span>
+                        <span class="text-sm font-medium">All Notes</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800"
+                        href="#">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <span class="text-sm font-medium">Recent</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800"
+                        href="#">
+                        <span class="material-symbols-outlined">folder</span>
+                        <span class="text-sm font-medium">Projects</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800"
+                        href="#">
+                        <span class="material-symbols-outlined">folder</span>
+                        <span class="text-sm font-medium">Personal</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800"
+                        href="#">
+                        <span class="material-symbols-outlined">delete</span>
+                        <span class="text-sm font-medium">Trash</span>
+                    </a>
+                </nav>
+            </div>
+            <div class="p-4 border-t border-gray-200 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+                        data-alt="User avatar"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA8JCgb3HMQMTafzVKhoOMEPHYaKoMwPafNuOmsRXJiUtHZ0HlhZV1WcDtboKN7C51p3s5sda2tW9iKtDna18ZmE77-qn_uIVz8uTO_CSD_bgH2BV6eXxEXNJ3b6nitv2RfJu47MSQQn6s0D0F88zwOMep2I7t6uAIsZbz0ly5Bce8eMgP2mwWRKGQg9JXM2SFgcLwBgNz1QsNjIrhl2HsIilNpcq6Yhc-tmyC-rW0Pk_WgQSAQb4VCQGl-9_VtjEbl_P5DpJx93Q");'>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-gray-800 dark:text-white text-sm font-medium">John Doe</h1>
+                        <p class="text-gray-500 dark:text-gray-400 text-xs">john.doe@email.com</p>
+                    </div>
+                    <button class="ml-auto text-gray-500 dark:text-gray-400">
+                        <span class="material-symbols-outlined">settings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col h-screen overflow-y-auto">
+            <!-- Top Bar -->
+            <div
+                class="sticky top-0 z-10 flex items-center justify-between h-16 px-8 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+                <h2 class="text-gray-800 dark:text-white text-2xl font-bold">All Notes</h2>
+                <div class="w-full max-w-md">
+                    <label class="flex flex-col min-w-40 h-10 w-full">
+                        <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                            <div
+                                class="text-gray-500 dark:text-gray-400 flex border-none bg-gray-200 dark:bg-gray-800 items-center justify-center pl-3 rounded-l-lg border-r-0">
+                                <span class="material-symbols-outlined">search</span>
+                            </div>
+                            <input
+                                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border-none bg-gray-200 dark:bg-gray-800 focus:border-none h-full placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 pl-2 text-sm"
+                                placeholder="Search notes or folders" value="" />
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <!-- Content Grid -->
+            <div class="p-8">
+                <!-- Folders Section -->
+                <div>
+                    <h3 class="text-gray-800 dark:text-white text-xl font-bold mb-4">Folders</h3>
+                    <div class="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6">
+                        <div
+                            class="relative group flex flex-col gap-3 p-4 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-4xl">folder</span>
+                                <div>
+                                    <p class="text-gray-800 dark:text-white text-base font-medium">Projects</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">12 notes</p>
+                                </div>
+                            </div>
+                            <button
+                                class="absolute top-2 right-2 p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-base">more_vert</span>
+                            </button>
+                        </div>
+                        <div
+                            class="relative group flex flex-col gap-3 p-4 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-4xl">folder</span>
+                                <div>
+                                    <p class="text-gray-800 dark:text-white text-base font-medium">Personal</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">8 notes</p>
+                                </div>
+                            </div>
+                            <button
+                                class="absolute top-2 right-2 p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-base">more_vert</span>
+                            </button>
+                        </div>
+                        <div
+                            class="relative group flex flex-col gap-3 p-4 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-4xl">folder</span>
+                                <div>
+                                    <p class="text-gray-800 dark:text-white text-base font-medium">Travel Plans</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">5 notes</p>
+                                </div>
+                            </div>
+                            <button
+                                class="absolute top-2 right-2 p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-base">more_vert</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notes Section -->
+                <div class="mt-12">
+                    <h3 class="text-gray-800 dark:text-white text-xl font-bold mb-4">Notes</h3>
+                    <div class="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
+                        <div
+                            class="group flex flex-col rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800/50 overflow-hidden cursor-pointer">
+                            <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                data-alt="Abstract gradient from blue to purple"
+                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrzvpL5OtPS-NVlQq2nHP0sm-CFQ4Z0TAK1gEnU-P4c9VUsY78VDonxrgyMzlQiOpKOn-ZGrl8pzaL1qEtlGh5zh9DqnXRis2W881L4RSWKE1xHXxS_RrIorUXL84adVdgJPmeqICfJmBwxg3LM9E76vt5Q0A5Av1-GAbFFStTDyYc1OwrweoHA2hInoX1Fiwmbi8B08xHOhRk0bdSC0Q3LQ-QrgOGRBxFziD3rZ3wQhdVK8Dpio5d6Sx6BY7AVDCgMsw9xcGvHA");'>
+                            </div>
+                            <div class="flex flex-col justify-between flex-grow p-4">
+                                <div>
+                                    <p class="text-gray-900 dark:text-white text-lg font-bold">Meeting Notes</p>
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 line-clamp-2">A summary of
+                                        the Q2 planning meeting, including action items...</p>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <p class="text-gray-500 dark:text-gray-500 text-xs">Last modified: 3 hours ago</p>
+                                    <button
+                                        class="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="group flex flex-col rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800/50 overflow-hidden cursor-pointer">
+                            <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                data-alt="Abstract gradient from green to yellow"
+                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCG1zdPdu3zRN1PTNqvuLXNnwsOmy5_Bp0gDNuLQT-6cPnk9kUEtnLjdzF0jGJKBxbPxpnoxxiC6fg5uGWfYGIMNxCAUw4exBwRYoRYbw8yJEMK6iDHHa9vD2Yl_dQy4OBfB4AEfUPwjlJUoJtEkTbIaMejdm8yM_ygxEfhYZpFz4H5oFXQVDrBeF2nlLPSruV2q2hMXesHHbBCBOAdL4YoXGHtVi_flrJZzdJg68AgPDziiguODvU4wii711xZTbK2kxYeT8zL6A");'>
+                            </div>
+                            <div class="flex flex-col justify-between flex-grow p-4">
+                                <div>
+                                    <p class="text-gray-900 dark:text-white text-lg font-bold">Project Ideas</p>
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 line-clamp-2">Brainstorming
+                                        session for the new mobile app. Key features include...</p>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <p class="text-gray-500 dark:text-gray-500 text-xs">Last modified: 1 day ago</p>
+                                    <button
+                                        class="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="group flex flex-col rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800/50 overflow-hidden cursor-pointer">
+                            <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                data-alt="Abstract gradient from red to orange"
+                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKRbLD3dzhwDaVnYkotuXp0t8XwOp8xtKSX4qOfcQ0fhxr5l3e1dHNkDsibGOzF_zgOApXImiWRClWdJtuJ6pbiTsSN2pjZ-1deSvj2PnuDXFNa_aUvBCwwuB661rgYC3ySQct-lc365GFTxNhdizfYTiLLU9Ik3uZn-eDRSm6RvbuLZoa4JCAI7PzFe9_7pzXYb4RcaBsls9XenOTFtXZkP9nW61duw-Gscqx8cMjXsN5Ho2cTrLefCmJrxmPySl6o6ss5Y9kvw");'>
+                            </div>
+                            <div class="flex flex-col justify-between flex-grow p-4">
+                                <div>
+                                    <p class="text-gray-900 dark:text-white text-lg font-bold">Grocery List</p>
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 line-clamp-2">Milk, bread,
+                                        eggs, cheese, and coffee beans.</p>
+                                </div>
+                                <div class="flex items-center justify-between mt-4">
+                                    <p class="text-gray-500 dark:text-gray-500 text-xs">Last modified: 5 days ago</p>
+                                    <button
+                                        class="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Empty State -->
+                <!-- <div class="text-center py-20">
+                <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700">note_add</span>
+                <h3 class="mt-4 text-xl font-medium text-gray-800 dark:text-white">No notes yet</h3>
+                <p class="mt-1 text-gray-500 dark:text-gray-400">Create your first note to get started!</p>
+                <button class="mt-6 flex mx-auto items-center justify-center rounded-lg h-10 px-6 bg-primary text-white text-sm font-bold">
+                    <span class="material-symbols-outlined mr-2">add</span>
+                    Create Note
+                </button>
+            </div> -->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

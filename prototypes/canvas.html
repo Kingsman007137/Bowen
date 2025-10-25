@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画布编辑 - 玻文卡片笔记</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* 毛玻璃卡片效果 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .glass-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+
+        .canvas-bg {
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .dark .canvas-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+
+        .canvas-container.grabbing {
+            cursor: grabbing !important;
+        }
+
+        .canvas-container.grabbing * {
+            cursor: grabbing !important;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark transition-colors duration-300 overflow-hidden">
+    <div class="relative h-screen w-full">
+        <!-- 背景图片 -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80');">
+            <div class="absolute inset-0 bg-white/40 dark:bg-black/40"></div>
+        </div>
+
+        <!-- 工具栏 -->
+        <div class="absolute left-4 top-1/2 -translate-y-1/2 z-50">
+            <div class="flex flex-col gap-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-2 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
+                <button onclick="goBack()" class="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" title="返回">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">arrow_back</span>
+                </button>
+                <div class="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+                <button onclick="setMode('select')" id="selectBtn" class="p-2.5 rounded-lg hover:bg-primary/10 transition-colors group bg-primary/20" title="选择模式">
+                    <span class="material-symbols-outlined text-primary">near_me</span>
+                </button>
+                <button onclick="setMode('pan')" id="panBtn" class="p-2.5 rounded-lg hover:bg-primary/10 transition-colors group" title="拖动画布">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">pan_tool</span>
+                </button>
+                <button onclick="addCard()" class="p-2.5 rounded-lg hover:bg-primary/10 transition-colors group" title="新建卡片">
+                    <span class="material-symbols-outlined text-primary">add</span>
+                </button>
+                <button onclick="setMode('connect')" id="connectBtn" class="p-2.5 rounded-lg hover:bg-primary/10 transition-colors group" title="连线模式">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">link</span>
+                </button>
+                <div class="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+                <button onclick="centerCanvas()" class="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" title="居中画布">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">center_focus_strong</span>
+                </button>
+                <button onclick="undo()" class="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" title="撤销">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">undo</span>
+                </button>
+                <button onclick="redo()" class="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" title="重做">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">redo</span>
+                </button>
+                <div class="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+                <button onclick="saveNotebook()" class="p-2.5 rounded-lg hover:bg-primary/10 transition-colors group" title="保存">
+                    <span class="material-symbols-outlined text-primary">save</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 顶部栏 -->
+        <div class="absolute top-4 left-1/2 -translate-x-1/2 z-50">
+            <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-6 py-3 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 flex items-center gap-4">
+                <h1 class="text-lg font-semibold text-gray-800 dark:text-white">产品设计思路</h1>
+                <div class="h-4 w-px bg-gray-300 dark:bg-gray-700"></div>
+                <span class="text-sm text-gray-500 dark:text-gray-400" id="modeIndicator">选择模式</span>
+                <div class="h-4 w-px bg-gray-300 dark:bg-gray-700"></div>
+                <button onclick="toggleTheme()" class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <span class="material-symbols-outlined text-gray-600 dark:text-gray-400 text-xl" id="themeIcon">light_mode</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 缩放控制 -->
+        <div class="absolute bottom-4 right-4 z-50">
+            <div class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-2 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 flex items-center gap-2">
+                <button onclick="zoomOut()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">zoom_out</span>
+                </button>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[50px] text-center" id="zoomLevel">100%</span>
+                <button onclick="zoomIn()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <span class="material-symbols-outlined text-gray-700 dark:text-gray-300">zoom_in</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 画布容器 -->
+        <div class="relative z-10 h-screen w-full overflow-hidden canvas-container" id="canvasContainer">
+            <div class="canvas-bg h-full w-full" id="canvas" style="transform-origin: 0 0;">
+                <!-- SVG for connections -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none" id="connectionSvg">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#137fec"></polygon>
+                        </marker>
+                    </defs>
+                </svg>
+
+                <!-- 示例卡片 -->
+                <div class="absolute group" style="left: 150px; top: 100px;" data-card-id="1">
+                    <div class="glass-card w-[300px] rounded-xl cursor-grab active:cursor-grabbing transition-all duration-300 hover:ring-2 hover:ring-primary/50">
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">核心功能</h3>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                                - 卡片式笔记<br>
+                                - 可视化连接<br>
+                                - 灵活组织
+                            </p>
+                        </div>
+                        <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            <button onclick="editCard(1)" class="p-2 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-base">edit</span>
+                            </button>
+                            <button onclick="deleteCard(1)" class="p-2 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-base">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute group" style="left: 520px; top: 300px;" data-card-id="2">
+                    <div class="glass-card w-[300px] rounded-xl cursor-grab active:cursor-grabbing transition-all duration-300 hover:ring-2 hover:ring-primary/50">
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">用户体验</h3>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                                - 毛玻璃效果<br>
+                                - 流畅动画<br>
+                                - 直观操作
+                            </p>
+                        </div>
+                        <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            <button onclick="editCard(2)" class="p-2 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-base">edit</span>
+                            </button>
+                            <button onclick="deleteCard(2)" class="p-2 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-base">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute group" style="left: 275px; top: 450px;" data-card-id="3">
+                    <div class="glass-card w-[300px] rounded-xl cursor-grab active:cursor-grabbing transition-all duration-300 hover:ring-2 hover:ring-primary/50">
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">目标用户</h3>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                                知识工作者、学习者、<br>
+                                需要整理思维的创作者
+                            </p>
+                        </div>
+                        <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            <button onclick="editCard(3)" class="p-2 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-base">edit</span>
+                            </button>
+                            <button onclick="deleteCard(3)" class="p-2 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-base">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑卡片弹窗 -->
+    <div id="editModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-3xl shadow-2xl transform transition-all scale-95 opacity-0" id="editModalContent">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">编辑卡片</h2>
+                <button onclick="closeEditModal()" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">close</span>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="editForm">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">标题</label>
+                        <input type="text" id="cardTitle" class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary" placeholder="输入卡片标题">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">内容</label>
+                        <textarea id="cardContent" rows="8" class="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border-none text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary resize-none" placeholder="输入卡片内容"></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">图片</label>
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
+                            <span class="material-symbols-outlined text-4xl text-gray-400 dark:text-gray-600">image</span>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">点击上传图片</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 justify-end">
+                        <button type="button" onclick="closeEditModal()" class="px-6 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">取消</button>
+                        <button type="submit" class="px-6 py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary/90 transition-colors">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCardId = null;
+        let zoomLevel = 1;
+        let isDragging = false;
+        let draggedCard = null;
+        let isPanning = false;
+        let startX, startY;
+        let canvasOffsetX = 0, canvasOffsetY = 0;
+        let connections = [];
+        let currentMode = 'select'; // select, pan, connect
+        let connectingFrom = null;
+        let cardIdCounter = 4;
+
+        const canvas = document.getElementById('canvas');
+        const canvasContainer = document.getElementById('canvasContainer');
+        const connectionSvg = document.getElementById('connectionSvg');
+
+        // 初始化连线
+        drawConnection(1, 3);
+        drawConnection(2, 3);
+
+        // 主题切换
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // 初始化主题
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('themeIcon').textContent = 'light_mode';
+        }
+
+        // 模式切换
+        function setMode(mode) {
+            currentMode = mode;
+            const modeNames = {
+                'select': '选择模式',
+                'pan': '拖动画布',
+                'connect': '连线模式'
+            };
+            document.getElementById('modeIndicator').textContent = modeNames[mode];
+            
+            // 更新按钮状态
+            ['selectBtn', 'panBtn', 'connectBtn'].forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                btn.classList.remove('bg-primary/20');
+                btn.querySelector('span').classList.remove('text-primary');
+                btn.querySelector('span').classList.add('text-gray-700', 'dark:text-gray-300');
+            });
+            
+            const activeBtn = document.getElementById(mode + 'Btn');
+            activeBtn.classList.add('bg-primary/20');
+            activeBtn.querySelector('span').classList.remove('text-gray-700', 'dark:text-gray-300');
+            activeBtn.querySelector('span').classList.add('text-primary');
+            
+            // 重置连线状态
+            if (mode !== 'connect') {
+                connectingFrom = null;
+                document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+            }
+            
+            // 更新光标
+            if (mode === 'pan') {
+                canvasContainer.style.cursor = 'grab';
+            } else {
+                canvasContainer.style.cursor = 'default';
+            }
+        }
+
+        // 居中画布
+        function centerCanvas() {
+            canvasOffsetX = 0;
+            canvasOffsetY = 0;
+            zoomLevel = 1;
+            canvas.style.transform = `translate(0, 0) scale(1)`;
+            document.getElementById('zoomLevel').textContent = '100%';
+            updateConnections();
+        }
+
+        function editCard(cardId) {
+            currentCardId = cardId;
+            const modal = document.getElementById('editModal');
+            const modalContent = document.getElementById('editModalContent');
+            
+            const card = document.querySelector(`[data-card-id="${cardId}"]`);
+            const title = card.querySelector('h3').textContent;
+            const content = card.querySelector('p').innerHTML.replace(/<br>/g, '\n');
+            
+            document.getElementById('cardTitle').value = title;
+            document.getElementById('cardContent').value = content;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            const modalContent = document.getElementById('editModalContent');
+            
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('cardTitle').value;
+            const content = document.getElementById('cardContent').value;
+            
+            if (currentCardId) {
+                const card = document.querySelector(`[data-card-id="${currentCardId}"]`);
+                card.querySelector('h3').textContent = title;
+                card.querySelector('p').innerHTML = content.replace(/\n/g, '<br>');
+            }
+            
+            closeEditModal();
+        });
+
+        function deleteCard(cardId) {
+            if (confirm('确定要删除这张卡片吗？')) {
+                const card = document.querySelector(`[data-card-id="${cardId}"]`);
+                if (card) {
+                    card.remove();
+                    connections = connections.filter(conn => {
+                        if (conn.from === cardId || conn.to === cardId) {
+                            const line = document.getElementById(`line-${conn.from}-${conn.to}`);
+                            if (line) line.remove();
+                            return false;
+                        }
+                        return true;
+                    });
+                }
+            }
+        }
+
+        function addCard() {
+            const card = document.createElement('div');
+            card.className = 'absolute group';
+            card.style.left = (200 + Math.random() * 400) + 'px';
+            card.style.top = (200 + Math.random() * 300) + 'px';
+            card.dataset.cardId = cardIdCounter;
+            
+            card.innerHTML = `
+                <div class="glass-card w-[300px] rounded-xl cursor-grab active:cursor-grabbing transition-all duration-300 hover:ring-2 hover:ring-primary/50">
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">新卡片</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">点击编辑按钮编辑内容...</p>
+                    </div>
+                    <div class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                        <button onclick="editCard(${cardIdCounter})" class="p-2 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-base">edit</span>
+                        </button>
+                        <button onclick="deleteCard(${cardIdCounter})" class="p-2 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-base">delete</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            canvas.appendChild(card);
+            cardIdCounter++;
+        }
+
+        function drawConnection(fromId, toId) {
+            if (connections.some(conn => conn.from === fromId && conn.to === toId)) {
+                return;
+            }
+            
+            connections.push({ from: fromId, to: toId });
+            
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.id = `line-${fromId}-${toId}`;
+            line.setAttribute('stroke', '#137fec');
+            line.setAttribute('stroke-width', '2');
+            line.setAttribute('marker-end', 'url(#arrowhead)');
+            
+            connectionSvg.appendChild(line);
+            updateConnections();
+        }
+
+        function updateConnections() {
+            connections.forEach(conn => {
+                const fromCard = document.querySelector(`[data-card-id="${conn.from}"]`);
+                const toCard = document.querySelector(`[data-card-id="${conn.to}"]`);
+                const line = document.getElementById(`line-${conn.from}-${conn.to}`);
+                
+                if (fromCard && toCard && line) {
+                    const fromRect = fromCard.getBoundingClientRect();
+                    const toRect = toCard.getBoundingClientRect();
+                    const canvasRect = canvas.getBoundingClientRect();
+                    
+                    const x1 = fromRect.left + fromRect.width / 2 - canvasRect.left;
+                    const y1 = fromRect.top + fromRect.height / 2 - canvasRect.top;
+                    const x2 = toRect.left + toRect.width / 2 - canvasRect.left;
+                    const y2 = toRect.top + toRect.height / 2 - canvasRect.top;
+                    
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                }
+            });
+        }
+
+        // 鼠标事件处理
+        canvasContainer.addEventListener('mousedown', function(e) {
+            if (currentMode === 'pan') {
+                // 拖动画布模式
+                isPanning = true;
+                startX = e.clientX - canvasOffsetX;
+                startY = e.clientY - canvasOffsetY;
+                canvasContainer.classList.add('grabbing');
+                e.preventDefault();
+            } else if (currentMode === 'select') {
+                // 选择模式 - 拖动卡片
+                const card = e.target.closest('[data-card-id]');
+                if (card && e.target.closest('.glass-card') && !e.target.closest('button')) {
+                    draggedCard = card;
+                    isDragging = true;
+                    const rect = card.getBoundingClientRect();
+                    startX = e.clientX - rect.left;
+                    startY = e.clientY - rect.top;
+                    e.preventDefault();
+                }
+            } else if (currentMode === 'connect') {
+                // 连线模式
+                const card = e.target.closest('[data-card-id]');
+                if (card) {
+                    const cardId = parseInt(card.dataset.cardId);
+                    if (!connectingFrom) {
+                        connectingFrom = cardId;
+                        card.querySelector('.glass-card').classList.add('ring-2', 'ring-primary');
+                    } else {
+                        if (connectingFrom !== cardId) {
+                            drawConnection(connectingFrom, cardId);
+                        }
+                        document.querySelectorAll('.glass-card').forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+                        connectingFrom = null;
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isPanning) {
+                canvasOffsetX = e.clientX - startX;
+                canvasOffsetY = e.clientY - startY;
+                canvas.style.transform = `translate(${canvasOffsetX}px, ${canvasOffsetY}px) scale(${zoomLevel})`;
+                updateConnections();
+            } else if (isDragging && draggedCard) {
+                const canvasRect = canvas.getBoundingClientRect();
+                const newX = e.clientX - canvasRect.left - startX;
+                const newY = e.clientY - canvasRect.top - startY;
+                draggedCard.style.left = newX + 'px';
+                draggedCard.style.top = newY + 'px';
+                updateConnections();
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            isPanning = false;
+            isDragging = false;
+            draggedCard = null;
+            canvasContainer.classList.remove('grabbing');
+        });
+
+        function zoomIn() {
+            zoomLevel = Math.min(zoomLevel + 0.1, 2);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            zoomLevel = Math.max(zoomLevel - 0.1, 0.5);
+            updateZoom();
+        }
+
+        function updateZoom() {
+            canvas.style.transform = `translate(${canvasOffsetX}px, ${canvasOffsetY}px) scale(${zoomLevel})`;
+            document.getElementById('zoomLevel').textContent = Math.round(zoomLevel * 100) + '%';
+            updateConnections();
+        }
+
+        function undo() {
+            alert('撤销功能（演示）');
+        }
+
+        function redo() {
+            alert('重做功能（演示）');
+        }
+
+        function saveNotebook() {
+            alert('笔记已保存！');
+        }
+
+        function goBack() {
+            if (confirm('确定要返回笔记架吗？\n未保存的修改可能会丢失')) {
+                window.location.href = 'notebook-shelf.html';
+            }
+        }
+
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+
+        window.addEventListener('resize', updateConnections);
+    </script>
+</body>
+</html>

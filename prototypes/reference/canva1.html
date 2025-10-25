@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Card-based Note-taking App</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          backdropBlur: {
+            'xl': '24px',
+          }
+        },
+      },
+    }
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+  <div class="relative min-h-screen w-full overflow-hidden">
+    <div class="absolute inset-0 z-0 bg-cover bg-center"
+      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD41HNZvxTKgFUdpFFfXhqFawDHR4Bk9z7FhzyaMPA1HIXpWuYY1wlOfSidWr2vVtwDY7ZBN0hOT_Ub-lGsF9jz7xM1r_129A-81jXeYpmy-QoFQSEa0areDdV5_mw4T7N0rbX5_i8lA3ymJuyIMiwIhTBiqIxCkGs9xoRPlpaj_XXe0WtXDUthE-oYXFhU3BKUrzS_nAGP7g1rYkSbtASae3t6X5tdZdrkUQMZYujLj6qwO8bBJaYIb0Hc5ipLNydFVDdZQ21QwQ');">
+      <div class="absolute inset-0 bg-black/10"></div>
+    </div>
+    <div class="relative z-10 flex h-screen w-full flex-col">
+      <div class="absolute left-4 top-1/2 -translate-y-1/2">
+        <div
+          class="flex flex-col gap-2 rounded-lg bg-white/20 dark:bg-black/20 p-2 shadow-lg backdrop-blur-xl border border-white/20">
+          <button class="group rounded-md p-3 transition-colors hover:bg-primary/80">
+            <span class="material-symbols-outlined text-white group-hover:text-white">add</span>
+          </button>
+          <button class="group rounded-md p-3 transition-colors hover:bg-primary/80">
+            <span class="material-symbols-outlined text-white group-hover:text-white">save</span>
+          </button>
+          <button class="group rounded-md p-3 transition-colors hover:bg-primary/80">
+            <span class="material-symbols-outlined text-white group-hover:text-white">arrow_back</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex-grow p-10">
+        <div class="relative h-full w-full">
+          <svg class="absolute inset-0 h-full w-full" style="pointer-events: none;">
+            <defs>
+              <marker id="arrowhead" markerHeight="7" markerWidth="10" orient="auto" refX="0" refY="3.5">
+                <polygon fill="#137fec" points="0 0, 10 3.5, 0 7"></polygon>
+              </marker>
+            </defs>
+            <line marker-end="url(#arrowhead)" stroke="#137fec" stroke-width="2" x1="300" x2="520" y1="200" y2="350">
+            </line>
+          </svg>
+          <div class="group absolute" style="left: 150px; top: 100px;">
+            <div
+              class="w-[300px] transform cursor-grab rounded-xl border border-white/20 bg-white/30 text-gray-900 shadow-2xl ring-2 ring-primary/50 ring-offset-4 ring-offset-transparent backdrop-blur-xl transition-all duration-300 hover:shadow-2xl dark:bg-black/20 dark:text-white">
+              <div class="p-5">
+                <h3 class="mb-2 text-lg font-bold">Brainstorming Session</h3>
+                <p class="text-sm">Key ideas for the new project launch. Focus on user engagement and social media
+                  presence.</p>
+              </div>
+              <button
+                class="absolute -right-2 -top-2 hidden rounded-full bg-primary p-1 text-white opacity-0 transition-opacity duration-300 group-hover:block group-hover:opacity-100">
+                <span class="material-symbols-outlined text-base">edit</span>
+              </button>
+            </div>
+          </div>
+          <div class="group absolute" style="left: 520px; top: 300px;">
+            <div
+              class="w-[300px] cursor-grab rounded-xl border border-white/20 bg-white/30 text-gray-900 shadow-lg backdrop-blur-xl transition-all duration-300 hover:shadow-2xl dark:bg-black/20 dark:text-white">
+              <div class="p-5">
+                <h3 class="mb-2 text-lg font-bold">Marketing Strategy</h3>
+                <p class="text-sm">
+                  - Influencer collaborations<br />
+                  - Targeted ad campaigns<br />
+                  - Content marketing calendar
+                </p>
+              </div>
+              <button
+                class="absolute -right-2 -top-2 hidden rounded-full bg-primary p-1 text-white opacity-0 transition-opacity duration-300 group-hover:block group-hover:opacity-100">
+                <span class="material-symbols-outlined text-base">edit</span>
+              </button>
+            </div>
+          </div>
+          <div class="group absolute" style="left: 200px; top: 450px;">
+            <div
+              class="w-[300px] cursor-grab rounded-xl border border-white/20 bg-white/30 text-gray-900 shadow-lg backdrop-blur-xl transition-all duration-300 hover:shadow-2xl dark:bg-black/20 dark:text-white">
+              <div class="p-5">
+                <h3 class="mb-2 text-lg font-bold">User Feedback</h3>
+                <p class="text-sm">Analyze survey results and identify pain points. Prioritize features for the next
+                  sprint.</p>
+              </div>
+              <button
+                class="absolute -right-2 -top-2 hidden rounded-full bg-primary p-1 text-white opacity-0 transition-opacity duration-300 group-hover:block group-hover:opacity-100">
+                <span class="material-symbols-outlined text-base">edit</span>
+              </button>
+            </div>
+          </div>
+          <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
+            <p class="text-white/70 text-sm">Right-click on the canvas to create a new note.</p>
+          </div>
+        </div>
+      </div>
+      <div class="absolute bottom-4 right-4">
+        <div
+          class="flex items-center gap-2 rounded-lg bg-white/20 dark:bg-black/20 p-2 shadow-lg backdrop-blur-xl border border-white/20">
+          <button class="group rounded-md p-2 transition-colors hover:bg-primary/80">
+            <span class="material-symbols-outlined text-white group-hover:text-white">zoom_in</span>
+          </button>
+          <button class="group rounded-md p-2 transition-colors hover:bg-primary/80">
+            <span class="material-symbols-outlined text-white group-hover:text-white">zoom_out</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 opacity-0 transition-opacity duration-300 pointer-events-none">
+      <div
+        class="w-full max-w-2xl transform rounded-xl border border-white/20 bg-white/80 p-6 text-gray-900 shadow-2xl backdrop-blur-xl transition-all duration-300 dark:bg-black/70 dark:text-white scale-95">
+        <div class="relative">
+          <button class="absolute -right-2 -top-2 rounded-full bg-primary p-2 text-white">
+            <span class="material-symbols-outlined">done</span>
+          </button>
+          <h2 class="mb-4 text-2xl font-bold">Edit Note</h2>
+          <div class="mb-4">
+            <label class="mb-1 block text-sm font-medium" for="note-title">Title</label>
+            <input
+              class="w-full rounded-md border border-gray-300 bg-white/50 p-2 text-gray-900 focus:border-primary focus:ring-primary dark:border-gray-700 dark:bg-black/30 dark:text-white"
+              id="note-title" type="text" value="Brainstorming Session" />
+          </div>
+          <div class="mb-4">
+            <label class="mb-1 block text-sm font-medium" for="note-content">Content</label>
+            <textarea
+              class="h-32 w-full rounded-md border border-gray-300 bg-white/50 p-2 text-gray-900 focus:border-primary focus:ring-primary dark:border-gray-700 dark:bg-black/30 dark:text-white"
+              id="note-content">Key ideas for the new project launch. Focus on user engagement and social media presence.</textarea>
+          </div>
+          <div class="mb-4">
+            <label class="mb-1 block text-sm font-medium">Image Placeholder</label>
+            <div
+              class="flex h-32 items-center justify-center rounded-md border-2 border-dashed border-gray-400 bg-white/50 text-gray-600 dark:border-gray-600 dark:bg-black/30 dark:text-gray-400">
+              <span class="material-symbols-outlined text-4xl">image</span>
+              <span class="ml-2 text-sm">Click to add image</span>
+            </div>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium">Quote Block</label>
+            <div
+              class="relative rounded-md border-l-4 border-primary bg-white/50 p-4 italic text-gray-700 dark:bg-black/30 dark:text-gray-300">
+              <span
+                class="material-symbols-outlined absolute -left-4 top-1/2 -translate-y-1/2 rotate-180 text-primary opacity-50">format_quote</span>
+              <textarea class="w-full resize-none rounded-md bg-transparent p-0 text-sm italic focus:outline-none"
+                placeholder="Enter your quote here..."></textarea>
+              <span
+                class="material-symbols-outlined absolute -right-4 top-1/2 -translate-y-1/2 text-primary opacity-50">format_quote</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
