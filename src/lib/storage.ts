@@ -1,41 +1,19 @@
 /**
  * 数据存储模块
- * 基于 localforage 封装,提供类型安全的 IndexedDB 操作
+ * 基于 localforage 封装，提供类型安全的 IndexedDB 操作
  */
 
 import localforage from 'localforage';
+import type { Card } from '@/types/card';
+import type { Connection } from '@/types/connection';
 
 /**
- * 卡片节点数据结构
- */
-export interface CardNode {
-  id: string;
-  type: 'card';
-  position: { x: number; y: number };
-  data: {
-    content: string; // 富文本内容
-    colorKey: 'blue' | 'pink' | 'mint'; // 渐变色系
-    createdAt: number;
-    updatedAt: number;
-  };
-}
-
-/**
- * 连线数据结构
- */
-export interface CardEdge {
-  id: string;
-  source: string; // 源节点 ID
-  target: string; // 目标节点 ID
-  type?: string;
-}
-
-/**
- * 画布状态数据
+ * 画布状态数据（按笔记本存储）
  */
 export interface CanvasState {
-  nodes: CardNode[];
-  edges: CardEdge[];
+  notebookId: string;
+  cards: Card[];
+  connections: Connection[];
   viewport?: {
     x: number;
     y: number;
@@ -52,22 +30,24 @@ const store = localforage.createInstance({
 });
 
 /**
- * 存储键名
+ * 生成画布状态的存储键
  */
-const STORAGE_KEYS = {
-  CANVAS_STATE: 'canvas_state',
-  THEME_MODE: 'theme_mode',
-} as const;
+function getCanvasKey(notebookId: string): string {
+  return `canvas_${notebookId}`;
+}
 
 /**
  * 保存画布状态
  */
-export async function saveCanvasState(state: CanvasState): Promise<void> {
+export async function saveCanvasState(notebookId: string, cards: Card[], connections: Connection[]): Promise<void> {
   try {
-    await store.setItem(STORAGE_KEYS.CANVAS_STATE, {
-      ...state,
+    const state: CanvasState = {
+      notebookId,
+      cards,
+      connections,
       lastSaved: Date.now(),
-    });
+    };
+    await store.setItem(getCanvasKey(notebookId), state);
   } catch (error) {
     console.error('保存画布状态失败:', error);
     throw error;
@@ -77,9 +57,9 @@ export async function saveCanvasState(state: CanvasState): Promise<void> {
 /**
  * 加载画布状态
  */
-export async function loadCanvasState(): Promise<CanvasState | null> {
+export async function loadCanvasState(notebookId: string): Promise<CanvasState | null> {
   try {
-    const state = await store.getItem<CanvasState>(STORAGE_KEYS.CANVAS_STATE);
+    const state = await store.getItem<CanvasState>(getCanvasKey(notebookId));
     return state;
   } catch (error) {
     console.error('加载画布状态失败:', error);
@@ -90,9 +70,9 @@ export async function loadCanvasState(): Promise<CanvasState | null> {
 /**
  * 清空画布状态
  */
-export async function clearCanvasState(): Promise<void> {
+export async function clearCanvasState(notebookId: string): Promise<void> {
   try {
-    await store.removeItem(STORAGE_KEYS.CANVAS_STATE);
+    await store.removeItem(getCanvasKey(notebookId));
   } catch (error) {
     console.error('清空画布状态失败:', error);
     throw error;
@@ -100,32 +80,19 @@ export async function clearCanvasState(): Promise<void> {
 }
 
 /**
- * 保存主题模式
+ * 删除笔记本的画布数据
  */
-export async function saveThemeMode(mode: 'light' | 'dark'): Promise<void> {
+export async function deleteNotebookCanvas(notebookId: string): Promise<void> {
   try {
-    await store.setItem(STORAGE_KEYS.THEME_MODE, mode);
+    await store.removeItem(getCanvasKey(notebookId));
   } catch (error) {
-    console.error('保存主题模式失败:', error);
+    console.error('删除笔记本画布数据失败:', error);
     throw error;
   }
 }
 
 /**
- * 加载主题模式
- */
-export async function loadThemeMode(): Promise<'light' | 'dark' | null> {
-  try {
-    const mode = await store.getItem<'light' | 'dark'>(STORAGE_KEYS.THEME_MODE);
-    return mode;
-  } catch (error) {
-    console.error('加载主题模式失败:', error);
-    return null;
-  }
-}
-
-/**
- * 获取存储使用情况(仅在支持的浏览器中)
+ * 获取存储使用情况（仅在支持的浏览器中）
  */
 export async function getStorageInfo(): Promise<{
   usage?: number;

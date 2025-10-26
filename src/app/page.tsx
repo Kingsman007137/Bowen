@@ -1,32 +1,38 @@
 'use client';
 
 /**
- * 主页面 - 画布视图
- * 这是整个应用的入口页面,展示无限画布和卡片系统
+ * 主页面
+ * 根据登录状态重定向到登录页或笔记架页面
  */
 
-import { useRef } from 'react';
-import CanvasContainer from '@/components/Canvas/CanvasContainer';
-import Navbar from '@/components/UI/Navbar';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  // 处理新建卡片按钮点击
-  const handleAddCard = () => {
-    // 调用画布容器的创建卡片函数
-    if (typeof window !== 'undefined' && (window as any).__createCard) {
-      (window as any).__createCard();
+  const router = useRouter();
+
+  useEffect(() => {
+    // 检查登录状态
+    if (typeof window !== 'undefined') {
+      const user = localStorage.getItem('user');
+      if (user) {
+        // 已登录，跳转到笔记架
+        router.replace('/shelf');
+      } else {
+        // 未登录，跳转到登录页
+        router.replace('/login');
+      }
     }
-  };
+  }, [router]);
 
   return (
-    <main className="relative w-full h-screen overflow-hidden">
-      {/* 导航栏 */}
-      <Navbar onAddCard={handleAddCard} />
-
-      {/* 画布容器 - 留出导航栏高度 */}
-      <div className="pt-16 w-full h-full">
-        <CanvasContainer onAddCardRequest={handleAddCard} />
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <span className="material-symbols-outlined text-6xl text-primary animate-spin">
+          progress_activity
+        </span>
+        <p className="mt-4 text-gray-600 dark:text-gray-400">加载中...</p>
       </div>
-    </main>
+    </div>
   );
 }

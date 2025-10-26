@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* 亮色系主题变量 */
 :root {
@@ -29,39 +31,10 @@
   --gradient-mint-end: #56D9A0;
 }
 
-/* 暗色系主题变量 */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    /* 主背景渐变 */
-    --background-dark-start: #0F1115;
-    --background-dark-end: #181C24;
-    
-    /* 文字颜色 */
-    --foreground: #E6E6E6;
-    --foreground-title: #FFFFFF;
-    
-    /* 卡片毛玻璃底色 */
-    --card-bg: rgba(255, 255, 255, 0.10);
-    
-    /* 边框颜色 */
-    --border-color: rgba(255, 255, 255, 0.20);
-    
-    /* 渐变色系 - 海雾蓝-暗 */
-    --gradient-blue-start: #3B6BEC;
-    --gradient-blue-end: #4AC6FF;
-    
-    /* 渐变色系 - 柔粉金-暗 */
-    --gradient-pink-start: #E8C0FF;
-    --gradient-pink-end: #FFD1C4;
-    
-    /* 渐变色系 - 薄荷绿-暗 */
-    --gradient-mint-start: #6DD9AE;
-    --gradient-mint-end: #40C894;
-  }
-}
+/* 暗色系主题变量 - 使用 class 模式 */
 
-/* 手动暗色模式 */
-:root.dark {
+/* 手动暗色模式 - 使用 html.dark 而不是 :root.dark */
+html.dark {
   /* 主背景渐变 */
   --background-dark-start: #0F1115;
   --background-dark-end: #181C24;
@@ -93,13 +66,20 @@
   --font-sans: Inter, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   
+  /* 自定义颜色 */
+  --color-primary: #137fec;
+  --color-background-light: #F5F5F7;
+  --color-background-dark: #101922;
+  
   /* 自定义圆角 */
   --radius-card: 16px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
   
   /* 自定义模糊 */
   --blur-sm: 12px;
   --blur-md: 16px;
-  --blur-lg: 20px;
+  --blur-lg: 24px;
   
   /* 自定义阴影 */
   --shadow-card-light: 0 6px 20px rgba(0, 0, 0, 0.04);
@@ -107,43 +87,76 @@
 }
 
 body {
-  background: linear-gradient(135deg, var(--background-light-start), var(--background-light-end));
-  color: var(--foreground);
+  background: #F5F5F7;
+  color: #111111;
   font-family: var(--font-sans);
   min-height: 100vh;
   transition: background 300ms ease, color 300ms ease;
   position: relative;
 }
 
-/* 背景网格点效果 */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
-  pointer-events: none;
-  z-index: 0;
+/* 暗色模式 */
+html.dark body {
+  background: #0a0e14;
+  color: #E6E6E6;
 }
 
-@media (prefers-color-scheme: dark) {
-  body:not(.light) {
-    background: linear-gradient(135deg, var(--background-dark-start), var(--background-dark-end));
+/* 毛玻璃卡片效果 - 参考原型图 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .glass-card {
+  background: rgba(30, 35, 45, 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.glass-card:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+}
+
+html.dark .glass-card:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+}
+
+/* 淡入动画 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
-  
-  body:not(.light)::before {
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-/* 手动暗色模式 */
-:root.dark body {
-  background: linear-gradient(135deg, var(--background-dark-start), var(--background-dark-end));
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
 }
 
-:root.dark body::before {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+/* Material Symbols 圆角样式配置 */
+.material-symbols-outlined,
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
 }
