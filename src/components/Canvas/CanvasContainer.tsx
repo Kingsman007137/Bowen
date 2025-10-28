@@ -28,7 +28,7 @@ import ZoomControls from './ZoomControls';
 // 定义节点类型
 const nodeTypes = {
   card: CardNode,
-};
+} as any;
 
 interface CanvasContainerProps {
   notebookId: string;
@@ -44,16 +44,11 @@ export default function CanvasContainer({
   const {
     cards,
     connections,
-    mode,
     addCard,
     updateCard,
     deleteCard,
     addConnection,
     deleteConnection,
-    startConnecting,
-    finishConnecting,
-    cancelConnecting,
-    connectingFromCard,
   } = useCanvasStore();
 
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
@@ -63,10 +58,22 @@ export default function CanvasContainer({
   useEffect(() => {
     if (reactFlowInstance && onRegisterFitView) {
       onRegisterFitView(() => {
-        reactFlowInstance.fitView({ duration: 200, padding: 0.2 });
+        reactFlowInstance.fitView({ duration: 200, padding: 0.2, maxZoom: 0.8 });
       });
     }
   }, [reactFlowInstance, onRegisterFitView]);
+
+  // 初始加载时自动适应视图（仅首次）
+  const [hasInitialized, setHasInitialized] = useState(false);
+  useEffect(() => {
+    if (reactFlowInstance && cards.length > 0 && !hasInitialized) {
+      // 延迟一下确保节点已经渲染
+      setTimeout(() => {
+        reactFlowInstance.fitView({ duration: 500, padding: 0.2, maxZoom: 0.8 });
+        setHasInitialized(true);
+      }, 100);
+    }
+  }, [reactFlowInstance, cards.length, hasInitialized]);
 
   // 将 cards 转换为 React Flow nodes
   const nodes: Node[] = useMemo(() => {
@@ -93,7 +100,9 @@ export default function CanvasContainer({
       id: conn.id,
       source: conn.source,
       target: conn.target,
-      type: 'smoothstep',
+      sourceHandle: conn.sourceHandle, // 保存起始连接点
+      targetHandle: conn.targetHandle, // 保存目标连接点
+      type: 'smoothstep', // smoothstep 类型会自动避开节点
       animated: false,
       style: {
         stroke: '#137fec',
@@ -103,6 +112,8 @@ export default function CanvasContainer({
         type: 'arrowclosed' as const,
         color: '#137fec',
       },
+      // 设置z-index确保连线在卡片下方
+      zIndex: -1,
     }));
   }, [connections]);
 
@@ -141,6 +152,8 @@ export default function CanvasContainer({
           notebookId,
           source: params.source,
           target: params.target,
+          sourceHandle: params.sourceHandle || undefined, // 保存连接点信息
+          targetHandle: params.targetHandle || undefined,
         });
         onShowToast('连线已创建', 'success');
       }
@@ -162,58 +175,22 @@ export default function CanvasContainer({
     [onEdgesChange, deleteConnection]
   );
 
-  // 双击画布创建卡片
-  const onDoubleClick = useCallback(
-    (event: React.MouseEvent) => {
-      if (!reactFlowInstance || mode !== 'select') return;
+  // 禁用双击画布创建卡片
+  // const onDoubleClick = useCallback(
+  //   (event: React.MouseEvent) => {
+  //     // 已禁用，只能通过工具栏按钮创建卡片
+  //   },
+  //   []
+  // );
 
-      // 获取画布坐标
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-
-      addCard({
-        notebookId,
-        position,
-        title: '新卡片',
-        content: '',
-      });
-
-      onShowToast('卡片已创建', 'success');
-    },
-    [reactFlowInstance, mode, notebookId, addCard, onShowToast]
-  );
-
-  // 处理节点点击（连线模式）
-  const onNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
-      if (mode === 'connect') {
-        if (!connectingFromCard) {
-          // 开始连线
-          startConnecting(node.id);
-        } else if (connectingFromCard !== node.id) {
-          // 完成连线
-          finishConnecting(node.id);
-          onShowToast('连线已创建', 'success');
-        }
-      }
-    },
-    [mode, connectingFromCard, startConnecting, finishConnecting, onShowToast]
-  );
-
-  // 点击画布取消连线
-  const onPaneClick = useCallback(() => {
-    if (mode === 'connect' && connectingFromCard) {
-      cancelConnecting();
-    }
-  }, [mode, connectingFromCard, cancelConnecting]);
-
-  // 根据模式设置交互性
-  const nodesDraggable = mode === 'select';
-  const nodesConnectable = mode === 'connect';
-  const elementsSelectable = mode === 'select';
-  const panOnDrag = mode === 'pan' ? [0, 1, 2] : false; // 拖动模式：左键、中键、右键都可以拖动
+  // 统一交互模式：
+  // - 卡片上：拖动卡片、连线
+  // - 画布空白处/卡片外：拖动画布（按住左键）
+  // - 滚轮：缩放
+  const nodesDraggable = true; // 允许拖动卡片
+  const nodesConnectable = true; // 允许连线
+  const elementsSelectable = true; // 允许选择
+  const panOnDrag = true; // 在任何空白区域都可以拖动画布（左键）
 
   return (
     <div className="w-full h-full relative">
@@ -224,22 +201,21 @@ export default function CanvasContainer({
         onEdgesChange={handleEdgesChange}
         onConnect={onConnect}
         onInit={setReactFlowInstance}
-        onDoubleClick={onDoubleClick}
-        onNodeClick={onNodeClick}
-        onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         nodesDraggable={nodesDraggable}
         nodesConnectable={nodesConnectable}
         elementsSelectable={elementsSelectable}
         panOnDrag={panOnDrag}
-        panOnScroll={mode === 'pan'}
-        zoomOnScroll={mode !== 'pan'}
-        zoomOnPinch
+        panOnScroll={false}
+        zoomOnScroll={true} // 滚轮缩放
+        zoomOnPinch={true}
         zoomOnDoubleClick={false}
+        selectNodesOnDrag={false}
         proOptions={{ hideAttribution: true }}
         minZoom={0.25}
         maxZoom={2}
-        fitView
+        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+        fitViewOptions={{ padding: 0.2, maxZoom: 0.8 }}
       >
         {/* 仅保留 React Flow 的背景网格，移除 CSS 的静态网格 */}
         <Background
@@ -254,16 +230,6 @@ export default function CanvasContainer({
         {/* 缩放控制 - 必须在 ReactFlow 内部 */}
         <ZoomControls showMiniMap={showMiniMap} onToggleMiniMap={() => setShowMiniMap(!showMiniMap)} />
       </ReactFlow>
-
-      {/* 连线模式提示 */}
-      {mode === 'connect' && connectingFromCard && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-primary text-white rounded-lg shadow-lg z-50 animate-fade-in">
-          <span className="material-symbols-rounded inline-block mr-2 align-middle text-base">
-            link
-          </span>
-          <span className="align-middle text-sm">点击目标卡片完成连线</span>
-        </div>
-      )}
     </div>
   );
 }

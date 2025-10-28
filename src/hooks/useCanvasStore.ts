@@ -8,7 +8,7 @@ import type { Card, Connection, CreateCardInput, CreateConnectionInput } from '@
 import { CARD_DEFAULTS } from '@/lib/constants';
 import { saveCanvasState, loadCanvasState } from '@/lib/storage';
 
-export type CanvasMode = 'select' | 'pan' | 'connect';
+export type CanvasMode = 'select'; // 统一模式：画布空白处拖动，卡片上操作卡片
 
 interface CanvasStore {
   // 当前笔记ID
@@ -20,9 +20,6 @@ interface CanvasStore {
   // 卡片和连线
   cards: Card[];
   connections: Connection[];
-  
-  // 连线模式下的临时状态
-  connectingFromCard: string | null;
   
   // 缩放和平移
   zoom: number;
@@ -44,11 +41,6 @@ interface CanvasStore {
   addConnection: (input: CreateConnectionInput) => Connection;
   deleteConnection: (id: string) => void;
   getConnection: (id: string) => Connection | undefined;
-  
-  // 连线模式状态
-  startConnecting: (cardId: string) => void;
-  finishConnecting: (targetCardId: string) => void;
-  cancelConnecting: () => void;
   
   // 视图控制
   setZoom: (zoom: number) => void;
@@ -72,12 +64,11 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
   mode: 'select',
   cards: [],
   connections: [],
-  connectingFromCard: null,
   zoom: 1,
   pan: { x: 0, y: 0 },
   
   setMode: (mode) => {
-    set({ mode, connectingFromCard: null });
+    set({ mode });
   },
   
   setCurrentNotebook: (notebookId) => {
@@ -140,6 +131,8 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
       notebookId: input.notebookId,
       source: input.source,
       target: input.target,
+      sourceHandle: input.sourceHandle,
+      targetHandle: input.targetHandle,
       type: input.type || 'default',
     };
     
@@ -158,36 +151,6 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
   
   getConnection: (id) => {
     return get().connections.find((conn) => conn.id === id);
-  },
-  
-  startConnecting: (cardId) => {
-    set({ connectingFromCard: cardId });
-  },
-  
-  finishConnecting: (targetCardId) => {
-    const { connectingFromCard, currentNotebookId } = get();
-    
-    if (connectingFromCard && currentNotebookId && connectingFromCard !== targetCardId) {
-      // 检查是否已存在相同的连线
-      const existingConnection = get().connections.find(
-        (conn) =>
-          conn.source === connectingFromCard && conn.target === targetCardId
-      );
-      
-      if (!existingConnection) {
-        get().addConnection({
-          notebookId: currentNotebookId,
-          source: connectingFromCard,
-          target: targetCardId,
-        });
-      }
-    }
-    
-    set({ connectingFromCard: null });
-  },
-  
-  cancelConnecting: () => {
-    set({ connectingFromCard: null });
   },
   
   setZoom: (zoom) => {
@@ -251,7 +214,6 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     set({
       cards: [],
       connections: [],
-      connectingFromCard: null,
       zoom: 1,
       pan: { x: 0, y: 0 },
     });

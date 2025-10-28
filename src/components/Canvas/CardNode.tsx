@@ -72,16 +72,56 @@ function CardNode({ data }: NodeProps<CardNodeData>) {
           </div>
         </div>
 
-        {/* React Flow 连接点 - 隐藏 */}
+        {/* React Flow 连接点 - 上下左右四个方向，选中卡片时显示 */}
         <Handle
-          type="target"
-          position={Position.Left}
-          className="!w-2 !h-2 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 group-hover:!opacity-100 transition-opacity"
+          type="source"
+          position={Position.Top}
+          id="top"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 group-hover:!opacity-100 transition-opacity !rounded-full"
         />
         <Handle
           type="source"
           position={Position.Right}
-          className="!w-2 !h-2 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 group-hover:!opacity-100 transition-opacity"
+          id="right"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 group-hover:!opacity-100 transition-opacity !rounded-full"
+        />
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          id="bottom"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 group-hover:!opacity-100 transition-opacity !rounded-full"
+        />
+        <Handle
+          type="source"
+          position={Position.Left}
+          id="left"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 group-hover:!opacity-100 transition-opacity !rounded-full"
+        />
+        
+        {/* Target handles - 允许接收连线 */}
+        <Handle
+          type="target"
+          position={Position.Top}
+          id="top-target"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 transition-opacity !rounded-full"
+        />
+        <Handle
+          type="target"
+          position={Position.Right}
+          id="right-target"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 transition-opacity !rounded-full"
+        />
+        <Handle
+          type="target"
+          position={Position.Bottom}
+          id="bottom-target"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 transition-opacity !rounded-full"
+        />
+        <Handle
+          type="target"
+          position={Position.Left}
+          id="left-target"
+          className="!w-3 !h-3 !bg-primary !border-2 !border-white dark:!border-gray-800 !opacity-0 transition-opacity !rounded-full"
         />
       </div>
 

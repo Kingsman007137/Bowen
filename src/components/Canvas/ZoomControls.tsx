@@ -5,7 +5,7 @@
  * 注意：这个组件必须在 ReactFlow 内部使用
  */
 
-import { Panel, useReactFlow } from '@xyflow/react';
+import { Panel, useReactFlow, useStore } from '@xyflow/react';
 
 interface ZoomControlsProps {
   showMiniMap: boolean;
@@ -14,6 +14,8 @@ interface ZoomControlsProps {
 
 export default function ZoomControls({ showMiniMap, onToggleMiniMap }: ZoomControlsProps) {
   const { zoomIn, zoomOut } = useReactFlow();
+  // 获取当前缩放级别
+  const zoom = useStore((state) => state.transform[2]);
 
   const handleZoomIn = () => {
     zoomIn({ duration: 200 });
@@ -35,6 +37,14 @@ export default function ZoomControls({ showMiniMap, onToggleMiniMap }: ZoomContr
             zoom_out
           </span>
         </button>
+        
+        {/* 显示当前缩放百分比 */}
+        <div className="px-2 min-w-[50px] text-center">
+          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+            {Math.round(zoom * 100)}%
+          </span>
+        </div>
+        
         <button
           onClick={handleZoomIn}
           className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

@@ -15,7 +15,7 @@ interface ToolbarProps {
 }
 
 export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProps) {
-  const { mode, setMode, addCard, currentNotebookId, saveNotebookData } = useCanvasStore();
+  const { addCard, currentNotebookId, saveNotebookData } = useCanvasStore();
   const { theme, toggleTheme } = useThemeStore();
 
   const handleAddCard = () => {
@@ -26,10 +26,6 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
         content: '',
       });
     }
-  };
-
-  const handleModeChange = (newMode: CanvasMode) => {
-    setMode(newMode);
   };
 
   const handleSave = () => {
@@ -45,28 +41,6 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
   const handleRedo = () => {
     // TODO: 实现重做功能
     console.log('重做');
-  };
-
-  const getModeIcon = (m: CanvasMode) => {
-    switch (m) {
-      case 'select':
-        return 'near_me';
-      case 'pan':
-        return 'pan_tool';
-      case 'connect':
-        return 'link';
-    }
-  };
-
-  const getModeLabel = (m: CanvasMode) => {
-    switch (m) {
-      case 'select':
-        return '选择模式';
-      case 'pan':
-        return '拖动画布';
-      case 'connect':
-        return '连线模式';
-    }
   };
 
   return (
@@ -87,40 +61,6 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
           
           <div className="h-px bg-gray-200 dark:bg-gray-700 my-0.5"></div>
           
-          {/* 选择模式 */}
-          <button
-            onClick={() => handleModeChange('select')}
-            className={`p-2 rounded-lg transition-colors ${
-              mode === 'select'
-                ? 'bg-primary/20'
-                : 'hover:bg-primary/10'
-            }`}
-            title="选择模式"
-          >
-            <span className={`material-symbols-rounded text-[20px] ${
-              mode === 'select' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'
-            }`}>
-              near_me
-            </span>
-          </button>
-          
-          {/* 拖动画布 */}
-          <button
-            onClick={() => handleModeChange('pan')}
-            className={`p-2 rounded-lg transition-colors ${
-              mode === 'pan'
-                ? 'bg-primary/20'
-                : 'hover:bg-primary/10'
-            }`}
-            title="拖动画布"
-          >
-            <span className={`material-symbols-rounded text-[20px] ${
-              mode === 'pan' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'
-            }`}>
-              pan_tool
-            </span>
-          </button>
-          
           {/* 新建卡片 */}
           <button
             onClick={handleAddCard}
@@ -129,23 +69,6 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
           >
             <span className="material-symbols-rounded text-primary text-[20px]">
               add
-            </span>
-          </button>
-          
-          {/* 连线模式 */}
-          <button
-            onClick={() => handleModeChange('connect')}
-            className={`p-2 rounded-lg transition-colors ${
-              mode === 'connect'
-                ? 'bg-primary/20'
-                : 'hover:bg-primary/10'
-            }`}
-            title="连线模式"
-          >
-            <span className={`material-symbols-rounded text-[20px] ${
-              mode === 'connect' ? 'text-primary' : 'text-gray-700 dark:text-gray-300'
-            }`}>
-              link
             </span>
           </button>
           
@@ -205,10 +128,6 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
           <h1 className="text-base font-semibold text-gray-800 dark:text-white">
             {notebookName}
           </h1>
-          <div className="h-4 w-px bg-gray-300 dark:bg-gray-700"></div>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            {getModeLabel(mode)}
-          </span>
           <div className="h-4 w-px bg-gray-300 dark:bg-gray-700"></div>
           <button
             onClick={toggleTheme}
