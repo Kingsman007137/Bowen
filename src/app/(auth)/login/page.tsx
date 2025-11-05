@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Sun, Moon, User, Loader2, LogIn } from 'lucide-react';
 import { useThemeStore } from '@/hooks/useTheme';
 import { initSeedData } from '@/lib/seedData';
 
@@ -58,9 +59,11 @@ export default function LoginPage() {
         className="absolute top-6 right-6 z-10 p-3 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-lg"
         title={theme === 'dark' ? '切换到白天模式' : '切换到黑夜模式'}
       >
-        <span className="material-symbols-outlined text-gray-700 dark:text-gray-300">
-          {theme === 'dark' ? 'light_mode' : 'dark_mode'}
-        </span>
+        {theme === 'dark' ? (
+          <Sun className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        ) : (
+          <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        )}
       </button>
 
       {/* 登录表单 */}
@@ -86,9 +89,7 @@ export default function LoginPage() {
                 用户名
               </label>
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  person
-                </span>
+                <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   id="username"
@@ -108,16 +109,12 @@ export default function LoginPage() {
             >
               {isLoading ? (
                 <>
-                  <span className="material-symbols-outlined animate-spin">
-                    progress_activity
-                  </span>
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   登录中...
                 </>
               ) : (
                 <>
-                  <span className="material-symbols-outlined">
-                    login
-                  </span>
+                  <LogIn className="w-4 h-4" />
                   登录
                 </>
               )}

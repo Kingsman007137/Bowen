@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Search, FileText } from 'lucide-react';
 import Sidebar from '@/components/UI/Sidebar';
 import NoteCard from '@/components/Shelf/NoteCard';
 import FolderCard from '@/components/Shelf/FolderCard';
@@ -170,9 +171,7 @@ export default function ShelfPage() {
           </h2>
           <div className="w-full max-w-md">
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                search
-              </span>
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="搜索笔记或文件夹..."
@@ -226,9 +225,7 @@ export default function ShelfPage() {
               </div>
             ) : (
               <div className="text-center py-16">
-                <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700 mb-4">
-                  description
-                </span>
+                <FileText className="w-16 h-16 text-gray-300 dark:text-gray-700 mb-4 mx-auto" />
                 <p className="text-gray-500 dark:text-gray-400">
                   还没有笔记，点击左侧"新建笔记"开始吧
                 </p>

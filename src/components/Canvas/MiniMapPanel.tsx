@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { MiniMap } from '@xyflow/react';
+import { X } from 'lucide-react';
 
 interface MiniMapPanelProps {
   isOpen: boolean;
@@ -27,9 +28,7 @@ export default function MiniMapPanel({ isOpen, onToggle }: MiniMapPanelProps) {
               onClick={onToggle}
               className="p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              <span className="material-symbols-rounded text-gray-500 dark:text-gray-400 text-sm">
-                close
-              </span>
+              <X className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
             </button>
           </div>
           <MiniMap

@@ -10,6 +10,7 @@ import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { Card } from '@/types/card';
 import CardEditModal from './CardEditModal';
 import { useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 
 export interface CardNodeData {
   card: Card;
@@ -60,14 +61,14 @@ function CardNode({ data }: NodeProps<CardNodeData>) {
               className="p-1.5 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform"
               title="编辑"
             >
-              <span className="material-symbols-rounded text-sm">edit</span>
+              <Pencil className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleDelete}
               className="p-1.5 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform"
               title="删除"
             >
-              <span className="material-symbols-rounded text-sm">delete</span>
+              <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

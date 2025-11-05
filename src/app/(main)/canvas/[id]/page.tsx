@@ -7,6 +7,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 import { useCanvasStore } from '@/hooks/useCanvasStore';
 import { useNotebookStore } from '@/hooks/useNotebookStore';
 import CanvasContainer from '@/components/Canvas/CanvasContainer';
@@ -79,9 +80,7 @@ export default function CanvasPage() {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-[#0a0e14] transition-colors duration-300">
         <div className="text-center">
-          <span className="material-symbols-outlined text-6xl text-primary animate-spin">
-            progress_activity
-          </span>
+          <Loader2 className="w-16 h-16 text-primary animate-spin mx-auto" />
           <p className="mt-4 text-gray-600 dark:text-gray-400">加载中...</p>
         </div>
       </div>

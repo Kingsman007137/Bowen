@@ -7,6 +7,7 @@
 
 import { getGradientStyle } from '@/lib/constants';
 import type { Notebook } from '@/types';
+import { Edit2, Trash2 } from 'lucide-react';
 
 interface NoteCardProps {
   notebook: Notebook;
@@ -57,24 +58,20 @@ export default function NoteCard({ notebook, onClick, onRename, onDelete }: Note
               e.stopPropagation();
               onRename?.();
             }}
-            className="p-1 hover:scale-125 transition-transform"
+            className="p-1.5 hover:scale-125 transition-transform bg-white/20 backdrop-blur-sm rounded-md"
             title="重命名"
           >
-            <span className="material-symbols-outlined text-white drop-shadow-lg text-xl">
-              edit
-            </span>
+            <Edit2 className="w-4 h-4 text-white drop-shadow-lg" />
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onDelete?.();
             }}
-            className="p-1 hover:scale-125 transition-transform"
+            className="p-1.5 hover:scale-125 transition-transform bg-white/20 backdrop-blur-sm rounded-md"
             title="删除"
           >
-            <span className="material-symbols-outlined text-white drop-shadow-lg text-xl">
-              delete
-            </span>
+            <Trash2 className="w-4 h-4 text-white drop-shadow-lg" />
           </button>
         </div>
       </div>

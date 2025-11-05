@@ -6,6 +6,7 @@
  */
 
 import { Panel, useReactFlow, useStore } from '@xyflow/react';
+import { ZoomIn, ZoomOut, Grid } from 'lucide-react';
 
 interface ZoomControlsProps {
   showMiniMap: boolean;
@@ -33,9 +34,7 @@ export default function ZoomControls({ showMiniMap, onToggleMiniMap }: ZoomContr
           className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           title="缩小"
         >
-          <span className="material-symbols-rounded text-gray-700 dark:text-gray-300 text-[18px]">
-            zoom_out
-          </span>
+          <ZoomOut className="w-4 h-4 text-gray-700 dark:text-gray-300" />
         </button>
         
         {/* 显示当前缩放百分比 */}
@@ -50,9 +49,7 @@ export default function ZoomControls({ showMiniMap, onToggleMiniMap }: ZoomContr
           className="p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           title="放大"
         >
-          <span className="material-symbols-rounded text-gray-700 dark:text-gray-300 text-[18px]">
-            zoom_in
-          </span>
+          <ZoomIn className="w-4 h-4 text-gray-700 dark:text-gray-300" />
         </button>
         <div className="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-0.5"></div>
         <button
@@ -64,11 +61,9 @@ export default function ZoomControls({ showMiniMap, onToggleMiniMap }: ZoomContr
           }`}
           title={showMiniMap ? '关闭预览' : '全局预览'}
         >
-          <span className={`material-symbols-rounded text-[18px] ${
+          <Grid className={`w-4 h-4 ${
             showMiniMap ? 'text-primary' : 'text-gray-700 dark:text-gray-300'
-          }`}>
-            grid_view
-          </span>
+          }`} />
         </button>
       </div>
     </Panel>

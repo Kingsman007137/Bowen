@@ -3,12 +3,6 @@
  * 包含毛玻璃效果、动画、公共样式等
  */
 
-/* ========== Material Symbols 图标配置 ========== */
-
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
 /* ========== 毛玻璃卡片效果（画布卡片专用） ========== */
 
 .glass-card {

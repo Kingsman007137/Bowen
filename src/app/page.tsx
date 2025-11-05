@@ -7,6 +7,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
@@ -28,9 +29,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
-        <span className="material-symbols-outlined text-6xl text-primary animate-spin">
-          progress_activity
-        </span>
+        <Loader2 className="w-16 h-16 text-primary animate-spin mx-auto" />
         <p className="mt-4 text-gray-600 dark:text-gray-400">加载中...</p>
       </div>
     </div>

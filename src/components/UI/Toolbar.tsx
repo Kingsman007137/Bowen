@@ -7,6 +7,7 @@
 
 import { useCanvasStore, type CanvasMode } from '@/hooks/useCanvasStore';
 import { useThemeStore } from '@/hooks/useTheme';
+import { ArrowLeft, Plus, Maximize2, Undo2, Redo2, Save, Sun, Moon } from 'lucide-react';
 
 interface ToolbarProps {
   onBack: () => void;
@@ -54,9 +55,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
             title="返回"
           >
-            <span className="material-symbols-rounded text-gray-700 dark:text-gray-300 text-[20px]">
-              arrow_back
-            </span>
+            <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
           
           <div className="h-px bg-gray-200 dark:bg-gray-700 my-0.5"></div>
@@ -67,9 +66,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-primary/10 transition-colors group"
             title="新建卡片"
           >
-            <span className="material-symbols-rounded text-primary text-[20px]">
-              add
-            </span>
+            <Plus className="w-5 h-5 text-primary" />
           </button>
           
           <div className="h-px bg-gray-200 dark:bg-gray-700 my-0.5"></div>
@@ -80,9 +77,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
             title="适应视图"
           >
-            <span className="material-symbols-rounded text-gray-700 dark:text-gray-300 text-[20px]">
-              fit_screen
-            </span>
+            <Maximize2 className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
           
           {/* 撤销 */}
@@ -91,9 +86,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
             title="撤销"
           >
-            <span className="material-symbols-rounded text-gray-700 dark:text-gray-300 text-[20px]">
-              undo
-            </span>
+            <Undo2 className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
           
           {/* 重做 */}
@@ -102,9 +95,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
             title="重做"
           >
-            <span className="material-symbols-rounded text-gray-700 dark:text-gray-300 text-[20px]">
-              redo
-            </span>
+            <Redo2 className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
           
           <div className="h-px bg-gray-200 dark:bg-gray-700 my-0.5"></div>
@@ -115,9 +106,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-primary/10 transition-colors group"
             title="保存"
           >
-            <span className="material-symbols-rounded text-primary text-[20px]">
-              save
-            </span>
+            <Save className="w-5 h-5 text-primary" />
           </button>
         </div>
       </div>
@@ -134,9 +123,11 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             title="切换主题"
           >
-            <span className="material-symbols-rounded text-gray-600 dark:text-gray-400 text-[18px]">
-              {theme === 'light' ? 'dark_mode' : 'light_mode'}
-            </span>
+            {theme === 'light' ? (
+              <Moon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            ) : (
+              <Sun className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            )}
           </button>
         </div>
       </div>

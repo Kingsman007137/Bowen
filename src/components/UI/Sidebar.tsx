@@ -6,6 +6,7 @@
  */
 
 import { useThemeStore } from '@/hooks/useTheme';
+import { Sun, Moon, Plus, FolderPlus, FileText, Clock, Trash2, Settings } from 'lucide-react';
 
 interface SidebarProps {
   onNewNotebook?: () => void;
@@ -27,9 +28,11 @@ export default function Sidebar({ onNewNotebook, onNewFolder }: SidebarProps) {
           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           title={theme === 'dark' ? '切换到白天模式' : '切换到黑夜模式'}
         >
-          <span className="material-symbols-outlined text-gray-600 dark:text-gray-400">
-            {theme === 'dark' ? 'light_mode' : 'dark_mode'}
-          </span>
+          {theme === 'dark' ? (
+            <Sun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          ) : (
+            <Moon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          )}
         </button>
       </div>
 
@@ -39,16 +42,14 @@ export default function Sidebar({ onNewNotebook, onNewFolder }: SidebarProps) {
           onClick={onNewNotebook}
           className="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
         >
-          <span className="material-symbols-outlined mr-2 text-lg">add</span>
+          <Plus className="w-4 h-4 mr-2" />
           新建笔记
         </button>
         <button
           onClick={onNewFolder}
           className="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
         >
-          <span className="material-symbols-outlined mr-2 text-lg">
-            create_new_folder
-          </span>
+          <FolderPlus className="w-4 h-4 mr-2" />
           新建文件夹
         </button>
       </div>
@@ -60,23 +61,21 @@ export default function Sidebar({ onNewNotebook, onNewFolder }: SidebarProps) {
             href="/shelf"
             className="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
           >
-            <span className="material-symbols-outlined text-xl">
-              description
-            </span>
+            <FileText className="w-5 h-5" />
             <span className="text-sm font-medium">所有笔记</span>
           </a>
           <a
             href="/shelf?filter=recent"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
-            <span className="material-symbols-outlined text-xl">schedule</span>
+            <Clock className="w-5 h-5" />
             <span className="text-sm font-medium">最近使用</span>
           </a>
           <a
             href="/shelf?filter=trash"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
-            <span className="material-symbols-outlined text-xl">delete</span>
+            <Trash2 className="w-5 h-5" />
             <span className="text-sm font-medium">回收站</span>
           </a>
         </div>
@@ -97,9 +96,7 @@ export default function Sidebar({ onNewNotebook, onNewFolder }: SidebarProps) {
             </p>
           </div>
           <button className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <span className="material-symbols-outlined text-gray-500 dark:text-gray-400 text-xl">
-              settings
-            </span>
+            <Settings className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
       </div>

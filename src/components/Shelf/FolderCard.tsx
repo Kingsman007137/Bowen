@@ -6,6 +6,7 @@
  */
 
 import type { Folder } from '@/types';
+import { Edit2, Trash2 } from 'lucide-react';
 
 interface FolderCardProps {
   folder: Folder;
@@ -42,24 +43,20 @@ export default function FolderCard({ folder, onClick, onRename, onDelete }: Fold
               e.stopPropagation();
               onRename?.();
             }}
-            className="p-1 hover:scale-125 transition-transform"
+            className="p-1.5 hover:scale-125 transition-transform bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-md"
             title="重命名"
           >
-            <span className="material-symbols-outlined text-gray-700 dark:text-gray-300 drop-shadow-md text-xl">
-              edit
-            </span>
+            <Edit2 className="w-4 h-4 text-gray-700 dark:text-gray-300" />
           </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onDelete?.();
             }}
-            className="p-1 hover:scale-125 transition-transform"
+            className="p-1.5 hover:scale-125 transition-transform bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-md"
             title="删除"
           >
-            <span className="material-symbols-outlined text-gray-700 dark:text-gray-300 drop-shadow-md text-xl">
-              delete
-            </span>
+            <Trash2 className="w-4 h-4 text-gray-700 dark:text-gray-300" />
           </button>
         </div>
       </div>
