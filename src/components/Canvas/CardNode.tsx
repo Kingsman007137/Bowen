@@ -5,11 +5,10 @@
  * 自定义 React Flow 节点，实现毛玻璃效果
  */
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { Card } from '@/types/card';
 import CardEditModal from './CardEditModal';
-import { useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 
 export interface CardNodeData {
@@ -30,28 +29,22 @@ function CardNode({ data }: NodeProps<CardNodeData>) {
     onDelete(card.id);
   };
 
-  // 格式化内容（去除HTML标签）
-  const getPlainText = (html: string) => {
-    if (!html) return '';
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return div.textContent || div.innerText || '';
-  };
-
-  const displayContent = card.content ? getPlainText(card.content) : '点击编辑按钮编辑内容...';
+  const displayContent = card.content || '<p class="text-gray-500 dark:text-gray-400 italic">点击编辑按钮编辑内容...</p>';
 
   return (
     <>
       <div className="group">
         {/* 毛玻璃卡片 - 参考原型图样式 */}
         <div className="glass-card w-[300px] rounded-xl cursor-grab active:cursor-grabbing transition-all duration-300 hover:ring-2 hover:ring-primary/50">
-          <div className="p-5">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <div className="p-5 flex flex-col max-h-[500px]">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 flex-shrink-0">
               {card.title || '新卡片'}
             </h3>
-            <p className="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-wrap break-words">
-              {displayContent}
-            </p>
+            {/* 显示HTML格式内容，支持滚动 */}
+            <div 
+              className="card-content text-sm text-gray-700 dark:text-gray-200 max-w-none overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-500 dark:hover:scrollbar-thumb-gray-500"
+              dangerouslySetInnerHTML={{ __html: displayContent }}
+            />
           </div>
           
           {/* 操作按钮 - 悬停显示 */}

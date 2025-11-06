@@ -183,12 +183,22 @@ html.dark .tiptap-editor blockquote {
 /* 编辑器内列表样式 */
 .tiptap-editor ul,
 .tiptap-editor ol {
-  padding-left: 1.5rem;
+  padding-left: 2rem;
   margin: 0.75rem 0;
+  list-style-position: outside;
+}
+
+.tiptap-editor ul {
+  list-style-type: disc;
+}
+
+.tiptap-editor ol {
+  list-style-type: decimal;
 }
 
 .tiptap-editor li {
   margin: 0.25rem 0;
+  display: list-item;
 }
 
 /* 编辑器内标题样式 */
@@ -226,4 +236,117 @@ html.dark .tiptap-editor blockquote {
 
 .animate-scale-in {
   animation: scale-in 0.2s ease-out;
+}
+
+/* 卡片内容样式（用于画布上显示的卡片） */
+.card-content ul,
+.card-content ol {
+  padding-left: 2rem;
+  margin: 0.5rem 0;
+  list-style-position: outside;
+}
+
+.card-content ul {
+  list-style-type: disc;
+}
+
+.card-content ol {
+  list-style-type: decimal;
+}
+
+.card-content li {
+  margin: 0.25rem 0;
+  display: list-item;
+}
+
+.card-content blockquote {
+  border-left: 3px solid #137fec;
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  color: inherit;
+  font-style: italic;
+  background: rgba(19, 127, 236, 0.08);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+html.dark .card-content blockquote {
+  background: rgba(19, 127, 236, 0.12);
+}
+
+.card-content p {
+  margin: 0.5rem 0;
+}
+
+.card-content p:first-child {
+  margin-top: 0;
+}
+
+.card-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* 空段落显示 */
+.card-content p:empty::before,
+.tiptap-editor p:empty::before {
+  content: '\200B'; /* 零宽空格，让空段落占据高度 */
+  display: inline;
+}
+
+.card-content strong {
+  font-weight: 600;
+}
+
+.card-content em {
+  font-style: italic;
+}
+
+.card-content s {
+  text-decoration: line-through;
+}
+
+.card-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 0.5rem 0;
+}
+
+/* 自定义滚动条样式 - Tailwind scrollbar utilities */
+@layer utilities {
+  /* 细滚动条 */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* 滚动条轨道 */
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* 滚动条滑块 */
+  .scrollbar-thumb-gray-400::-webkit-scrollbar-thumb {
+    background-color: rgb(156 163 175);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thumb-gray-600::-webkit-scrollbar-thumb {
+    background-color: rgb(75 85 99);
+    border-radius: 3px;
+  }
+
+  /* 悬停时的滚动条滑块 */
+  .hover\:scrollbar-thumb-gray-500:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(107 114 128);
+  }
+
+  /* Dark mode 支持 */
+  .dark .dark\:scrollbar-thumb-gray-600::-webkit-scrollbar-thumb {
+    background-color: rgb(75 85 99);
+  }
+
+  .dark .dark\:hover\:scrollbar-thumb-gray-500:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(107 114 128);
+  }
 }

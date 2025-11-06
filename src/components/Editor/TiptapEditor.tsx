@@ -17,10 +17,7 @@ import {
   ListOrdered, 
   Bold, 
   Italic, 
-  Strikethrough,
-  Heading1,
-  Heading2,
-  Heading3
+  Strikethrough
 } from 'lucide-react';
 
 interface TiptapEditorProps {
@@ -63,7 +60,7 @@ export default function TiptapEditor({
     },
     editorProps: {
       attributes: {
-        class: 'tiptap-editor prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[400px] p-6',
+        class: 'tiptap-editor prose prose-sm dark:prose-invert max-w-none focus:outline-none h-full p-6 overflow-y-auto bg-transparent text-gray-900 dark:text-gray-100',
       },
     },
   });
@@ -114,10 +111,10 @@ export default function TiptapEditor({
   }
 
   return (
-    <div className="w-full bg-white dark:bg-gray-700 rounded-lg overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-transparent">
       {/* 工具栏 */}
       {editable && (
-        <div className="flex flex-wrap items-center gap-1 p-3 border-b border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
+        <div className="flex flex-wrap items-center gap-1 p-3 border-b border-gray-300/30 dark:border-gray-600/30 bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-t-lg">
           {/* 图片上传 */}
           <input
             ref={imageInputRef}
@@ -128,125 +125,94 @@ export default function TiptapEditor({
           />
           <button
             onClick={handleImageButtonClick}
-            className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors"
             title="插入图片"
             type="button"
           >
-            <ImagePlus className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <ImagePlus className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
 
-          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+          <div className="w-px h-6 bg-gray-400/50 dark:bg-gray-500/50 mx-1" />
 
           {/* 引用 */}
           <button
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('blockquote') ? 'bg-gray-300 dark:bg-gray-600' : ''
+            className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
+              editor.isActive('blockquote') ? 'bg-white/30 dark:bg-black/30' : ''
             }`}
             title="引用块"
             type="button"
           >
-            <Quote className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <Quote className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
 
-          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+          <div className="w-px h-6 bg-gray-400/50 dark:bg-gray-500/50 mx-1" />
 
           {/* 点序号（无序列表） */}
           <button
             onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('bulletList') ? 'bg-gray-300 dark:bg-gray-600' : ''
+            className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
+              editor.isActive('bulletList') ? 'bg-white/30 dark:bg-black/30' : ''
             }`}
             title="点序号列表"
             type="button"
           >
-            <List className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <List className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
 
           {/* 数字序号（有序列表） */}
           <button
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('orderedList') ? 'bg-gray-300 dark:bg-gray-600' : ''
+            className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
+              editor.isActive('orderedList') ? 'bg-white/30 dark:bg-black/30' : ''
             }`}
             title="数字序号列表"
             type="button"
           >
-            <ListOrdered className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <ListOrdered className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
 
-          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+          <div className="w-px h-6 bg-gray-400/50 dark:bg-gray-500/50 mx-1" />
 
           {/* 文本格式 */}
           <button
             onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('bold') ? 'bg-gray-300 dark:bg-gray-600' : ''
+            className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
+              editor.isActive('bold') ? 'bg-white/30 dark:bg-black/30' : ''
             }`}
             title="粗体"
             type="button"
           >
-            <Bold className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <Bold className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
           <button
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('italic') ? 'bg-gray-300 dark:bg-gray-600' : ''
+            className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
+              editor.isActive('italic') ? 'bg-white/30 dark:bg-black/30' : ''
             }`}
             title="斜体"
             type="button"
           >
-            <Italic className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <Italic className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
           <button
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('strike') ? 'bg-gray-300 dark:bg-gray-600' : ''
+            className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
+              editor.isActive('strike') ? 'bg-white/30 dark:bg-black/30' : ''
             }`}
             title="删除线"
             type="button"
           >
-            <Strikethrough className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <Strikethrough className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
 
-          <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-
-          {/* 标题 */}
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('heading', { level: 1 }) ? 'bg-gray-300 dark:bg-gray-600' : ''
-            }`}
-            title="标题1"
-            type="button"
-          >
-            <Heading1 className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('heading', { level: 2 }) ? 'bg-gray-300 dark:bg-gray-600' : ''
-            }`}
-            title="标题2"
-            type="button"
-          >
-            <Heading2 className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-            className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
-              editor.isActive('heading', { level: 3 }) ? 'bg-gray-300 dark:bg-gray-600' : ''
-            }`}
-            title="标题3"
-            type="button"
-          >
-            <Heading3 className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-          </button>
         </div>
       )}
 
       {/* 编辑器内容 */}
-      <EditorContent editor={editor} />
+      <div className="flex-1 overflow-hidden">
+        <EditorContent editor={editor} className="h-full" />
+      </div>
     </div>
   );
 }
