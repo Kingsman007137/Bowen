@@ -9,7 +9,10 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Image from '@tiptap/extension-image';
-import { useEffect, useRef } from 'react';
+import TiptapBold from '@tiptap/extension-bold';
+import TiptapItalic from '@tiptap/extension-italic';
+import TiptapStrike from '@tiptap/extension-strike';
+import { useEffect, useRef, useState } from 'react';
 import { 
   ImagePlus, 
   Quote, 
@@ -34,12 +37,47 @@ export default function TiptapEditor({
   placeholder = '开始输入...',
 }: TiptapEditorProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [, forceUpdate] = useState(0);
 
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
         heading: {
           levels: [1, 2, 3],
+        },
+        // 禁用 StarterKit 中的 bold, italic, strike，用自定义的替代
+        bold: false,
+        italic: false,
+        strike: false,
+      }),
+      // 自定义 Bold 扩展，禁用快捷键
+      TiptapBold.configure({
+        HTMLAttributes: {
+          class: 'font-bold',
+        },
+      }).extend({
+        addKeyboardShortcuts() {
+          return {}; // 禁用所有快捷键
+        },
+      }),
+      // 自定义 Italic 扩展，禁用快捷键
+      TiptapItalic.configure({
+        HTMLAttributes: {
+          class: 'italic',
+        },
+      }).extend({
+        addKeyboardShortcuts() {
+          return {}; // 禁用所有快捷键
+        },
+      }),
+      // 自定义 Strike 扩展，禁用快捷键
+      TiptapStrike.configure({
+        HTMLAttributes: {
+          class: 'line-through',
+        },
+      }).extend({
+        addKeyboardShortcuts() {
+          return {}; // 禁用所有快捷键
         },
       }),
       Placeholder.configure({
@@ -57,6 +95,10 @@ export default function TiptapEditor({
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
+      forceUpdate(prev => prev + 1); // 强制重新渲染以更新按钮状态
+    },
+    onSelectionUpdate: () => {
+      forceUpdate(prev => prev + 1); // 选区变化时也更新按钮状态
     },
     editorProps: {
       attributes: {
@@ -136,9 +178,13 @@ export default function TiptapEditor({
 
           {/* 引用 */}
           <button
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (!editor) return;
+              editor.chain().focus().toggleBlockquote().run();
+            }}
             className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
-              editor.isActive('blockquote') ? 'bg-white/30 dark:bg-black/30' : ''
+              editor.isActive('blockquote') ? 'bg-white/30 dark:bg-black/30 ring-2 ring-primary/50' : ''
             }`}
             title="引用块"
             type="button"
@@ -150,9 +196,13 @@ export default function TiptapEditor({
 
           {/* 点序号（无序列表） */}
           <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (!editor) return;
+              editor.chain().focus().toggleBulletList().run();
+            }}
             className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
-              editor.isActive('bulletList') ? 'bg-white/30 dark:bg-black/30' : ''
+              editor.isActive('bulletList') ? 'bg-white/30 dark:bg-black/30 ring-2 ring-primary/50' : ''
             }`}
             title="点序号列表"
             type="button"
@@ -162,9 +212,13 @@ export default function TiptapEditor({
 
           {/* 数字序号（有序列表） */}
           <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (!editor) return;
+              editor.chain().focus().toggleOrderedList().run();
+            }}
             className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
-              editor.isActive('orderedList') ? 'bg-white/30 dark:bg-black/30' : ''
+              editor.isActive('orderedList') ? 'bg-white/30 dark:bg-black/30 ring-2 ring-primary/50' : ''
             }`}
             title="数字序号列表"
             type="button"
@@ -176,9 +230,14 @@ export default function TiptapEditor({
 
           {/* 文本格式 */}
           <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (!editor) return;
+              editor.chain().focus().toggleBold().run();
+              forceUpdate(prev => prev + 1);
+            }}
             className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
-              editor.isActive('bold') ? 'bg-white/30 dark:bg-black/30' : ''
+              editor.isActive('bold') ? 'bg-white/30 dark:bg-black/30 ring-2 ring-primary/50' : ''
             }`}
             title="粗体"
             type="button"
@@ -186,9 +245,14 @@ export default function TiptapEditor({
             <Bold className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
           <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (!editor) return;
+              editor.chain().focus().toggleItalic().run();
+              forceUpdate(prev => prev + 1);
+            }}
             className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
-              editor.isActive('italic') ? 'bg-white/30 dark:bg-black/30' : ''
+              editor.isActive('italic') ? 'bg-white/30 dark:bg-black/30 ring-2 ring-primary/50' : ''
             }`}
             title="斜体"
             type="button"
@@ -196,9 +260,14 @@ export default function TiptapEditor({
             <Italic className="w-4 h-4 text-gray-800 dark:text-gray-200" />
           </button>
           <button
-            onClick={() => editor.chain().focus().toggleStrike().run()}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              if (!editor) return;
+              editor.chain().focus().toggleStrike().run();
+              forceUpdate(prev => prev + 1);
+            }}
             className={`p-2 rounded hover:bg-white/20 dark:hover:bg-black/20 transition-colors ${
-              editor.isActive('strike') ? 'bg-white/30 dark:bg-black/30' : ''
+              editor.isActive('strike') ? 'bg-white/30 dark:bg-black/30 ring-2 ring-primary/50' : ''
             }`}
             title="删除线"
             type="button"

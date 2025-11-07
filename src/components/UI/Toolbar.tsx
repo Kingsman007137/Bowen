@@ -7,7 +7,7 @@
 
 import { useCanvasStore, type CanvasMode } from '@/hooks/useCanvasStore';
 import { useThemeStore } from '@/hooks/useTheme';
-import { ArrowLeft, Plus, Maximize2, Undo2, Redo2, Save, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, Plus, Scan, Undo2, Redo2, Save, Sun, Moon } from 'lucide-react';
 
 interface ToolbarProps {
   onBack: () => void;
@@ -77,7 +77,7 @@ export default function Toolbar({ onBack, notebookName, onFitView }: ToolbarProp
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
             title="适应视图"
           >
-            <Maximize2 className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            <Scan className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           </button>
           
           {/* 撤销 */}
