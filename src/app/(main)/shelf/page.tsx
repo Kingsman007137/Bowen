@@ -124,7 +124,7 @@ export default function ShelfPage() {
   };
 
   // 文件夹操作
-  const handleFolderClick = (id: string) => {
+  const handleFolderClick = () => {
     showToast('文件夹过滤功能开发中', 'info');
   };
 
@@ -196,7 +196,7 @@ export default function ShelfPage() {
                   <FolderCard
                     key={folder.id}
                     folder={folder}
-                    onClick={() => handleFolderClick(folder.id)}
+                    onClick={handleFolderClick}
                     onRename={() => handleFolderRename(folder.id, folder.name)}
                     onDelete={() => handleFolderDelete(folder.id, folder.name)}
                   />
@@ -227,7 +227,7 @@ export default function ShelfPage() {
               <div className="text-center py-16">
                 <FileText className="w-16 h-16 text-gray-300 dark:text-gray-700 mb-4 mx-auto" />
                 <p className="text-gray-500 dark:text-gray-400">
-                  还没有笔记，点击左侧"新建笔记"开始吧
+                  还没有笔记，点击左侧&ldquo;新建笔记&rdquo;开始吧
                 </p>
               </div>
             )}

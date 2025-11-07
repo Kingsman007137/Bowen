@@ -5,7 +5,6 @@
  * 注意：MiniMap 必须在 ReactFlow 内部使用
  */
 
-import { useState } from 'react';
 import { MiniMap } from '@xyflow/react';
 import { X } from 'lucide-react';
 

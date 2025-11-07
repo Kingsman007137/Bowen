@@ -10,6 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { useCanvasStore } from '@/hooks/useCanvasStore';
 import { useNotebookStore } from '@/hooks/useNotebookStore';
+import type { Notebook } from '@/types/notebook';
 import CanvasContainer from '@/components/Canvas/CanvasContainer';
 import Toolbar from '@/components/UI/Toolbar';
 import Toast, { type ToastType } from '@/components/UI/Toast';
@@ -22,7 +23,7 @@ export default function CanvasPage() {
   const { notebooks } = useNotebookStore();
   const { loadNotebookData, currentNotebookId, saveNotebookData } = useCanvasStore();
 
-  const [notebook, setNotebook] = useState<any>(null);
+  const [notebook, setNotebook] = useState<Notebook | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
   const fitViewRef = useRef<(() => void) | null>(null);

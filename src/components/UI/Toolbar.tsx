@@ -5,7 +5,7 @@
  * 提供画布操作工具
  */
 
-import { useCanvasStore, type CanvasMode } from '@/hooks/useCanvasStore';
+import { useCanvasStore } from '@/hooks/useCanvasStore';
 import { useThemeStore } from '@/hooks/useTheme';
 import { ArrowLeft, Plus, Scan, Undo2, Redo2, Save, Sun, Moon } from 'lucide-react';
 

@@ -17,6 +17,8 @@ import {
   BackgroundVariant,
   NodeChange,
   EdgeChange,
+  ReactFlowInstance,
+  NodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import CardNode from './CardNode';
@@ -26,9 +28,9 @@ import MiniMapPanel from './MiniMapPanel';
 import ZoomControls from './ZoomControls';
 
 // 定义节点类型
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   card: CardNode,
-} as any;
+};
 
 interface CanvasContainerProps {
   notebookId: string;
@@ -44,14 +46,13 @@ export default function CanvasContainer({
   const {
     cards,
     connections,
-    addCard,
     updateCard,
     deleteCard,
     addConnection,
     deleteConnection,
   } = useCanvasStore();
 
-  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
   const [showMiniMap, setShowMiniMap] = useState(false);
 
   // 注册 fitView 函数供外部调用
@@ -83,11 +84,11 @@ export default function CanvasContainer({
       position: card.position,
       data: {
         card,
-        onEdit: (id: string) => {
+        onEdit: () => {
           // 编辑卡片逻辑将在 CardNode 中处理
         },
-        onDelete: (id: string) => {
-          deleteCard(id);
+        onDelete: () => {
+          deleteCard(card.id);
           onShowToast('卡片已删除', 'success');
         },
       },

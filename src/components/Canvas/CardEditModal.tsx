@@ -5,7 +5,7 @@
  * 卡片居中放大到画布80%，保持原有样式（毛玻璃效果、颜色等）
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { Card } from '@/types/card';
 import { useCanvasStore } from '@/hooks/useCanvasStore';
@@ -22,7 +22,6 @@ export default function CardEditModal({ card, onClose }: CardEditModalProps) {
   
   const [title, setTitle] = useState(card.title || '');
   const [content, setContent] = useState(card.content || '');
-  const [isClosing, setIsClosing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -48,14 +47,13 @@ export default function CardEditModal({ card, onClose }: CardEditModalProps) {
     handleClose();
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
-    setIsClosing(true);
     // 等待缩小动画完成后关闭
     setTimeout(() => {
       onClose();
     }, 300);
-  };
+  }, [onClose]);
 
   // ESC键关闭
   useEffect(() => {
@@ -67,7 +65,7 @@ export default function CardEditModal({ card, onClose }: CardEditModalProps) {
 
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
-  }, []);
+  }, [handleClose]);
 
   if (!mounted) return null;
 

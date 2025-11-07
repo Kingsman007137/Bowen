@@ -5,11 +5,11 @@
  * 用于切换卡片渐变色系
  */
 
-import { GRADIENT_COLORS, type GradientColorKey, type ThemeMode } from '@/lib/constants';
+import { CARD_GRADIENT_COLORS, type CardGradientColorKey, type ThemeMode } from '@/lib/constants';
 
 interface ColorPickerProps {
-  selectedColor: GradientColorKey;
-  onColorChange: (color: GradientColorKey) => void;
+  selectedColor: CardGradientColorKey;
+  onColorChange: (color: CardGradientColorKey) => void;
   mode?: ThemeMode;
 }
 
@@ -18,8 +18,8 @@ export default function ColorPicker({
   onColorChange,
   mode = 'light',
 }: ColorPickerProps) {
-  const colors = GRADIENT_COLORS[mode];
-  const colorKeys = Object.keys(colors) as GradientColorKey[];
+  const colors = CARD_GRADIENT_COLORS[mode];
+  const colorKeys = Object.keys(colors) as CardGradientColorKey[];
 
   return (
     <div className="flex gap-2 p-2">

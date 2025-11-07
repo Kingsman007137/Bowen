@@ -46,7 +46,7 @@ export const useThemeStore = create<ThemeStore>()(
               const theme = parsed.state?.theme || 'light';
               applyTheme(theme);
               set({ theme });
-            } catch (e) {
+            } catch {
               // 如果解析失败，使用系统偏好
               const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
               const theme = prefersDark ? 'dark' : 'light';

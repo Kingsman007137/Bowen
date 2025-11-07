@@ -6,18 +6,20 @@
  */
 
 import { memo, useState } from 'react';
-import { Handle, Position, type NodeProps } from '@xyflow/react';
+import { Handle, Position, type NodeProps, type Node } from '@xyflow/react';
 import type { Card } from '@/types/card';
 import CardEditModal from './CardEditModal';
 import { Pencil, Trash2 } from 'lucide-react';
 
-export interface CardNodeData {
+export interface CardNodeData extends Record<string, unknown> {
   card: Card;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-function CardNode({ data }: NodeProps<CardNodeData>) {
+export type CardNodeType = Node<CardNodeData, 'card'>;
+
+function CardNode({ data }: NodeProps<CardNodeType>) {
   const { card, onDelete } = data;
   const [showEditModal, setShowEditModal] = useState(false);
 

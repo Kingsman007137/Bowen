@@ -5,7 +5,6 @@
 
 import { create } from 'zustand';
 import type { Card, Connection, CreateCardInput, CreateConnectionInput } from '@/types';
-import { CARD_DEFAULTS } from '@/lib/constants';
 import { saveCanvasState, loadCanvasState } from '@/lib/storage';
 
 export type CanvasMode = 'select'; // 统一模式：画布空白处拖动，卡片上操作卡片
