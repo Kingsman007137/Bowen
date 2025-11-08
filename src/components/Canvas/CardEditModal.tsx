@@ -92,18 +92,26 @@ export default function CardEditModal({ card, onClose }: CardEditModalProps) {
           top: '5vh',
         }}
       >
-        {/* 操作按钮 - 右上角 */}
-        <div className="absolute -top-3 -right-3 flex gap-2 z-10">
+        {/* 操作按钮 - 嵌在卡片右上角 */}
+        <div className="absolute top-0 right-0 flex gap-1 z-10">
           <button
             onClick={handleSave}
-            className="p-2.5 rounded-full bg-green-500 text-white shadow-lg hover:scale-110 transition-transform"
+            className="p-1.5 rounded bg-green-500/90 text-white hover:bg-green-600 transition-colors border border-white/20"
+            style={{
+              width: '36px',
+              height: '36px',
+            }}
             title="保存"
           >
             <Check className="w-5 h-5" />
           </button>
           <button
             onClick={handleClose}
-            className="p-2.5 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform"
+            className="p-1.5 rounded bg-red-500/90 text-white hover:bg-red-600 transition-colors border border-white/20"
+            style={{
+              width: '36px',
+              height: '36px',
+            }}
             title="关闭 (ESC)"
           >
             <X className="w-5 h-5" />

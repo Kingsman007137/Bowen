@@ -5,7 +5,7 @@
  * 注意：MiniMap 必须在 ReactFlow 内部使用
  */
 
-import { MiniMap } from '@xyflow/react';
+import { MiniMap, Panel } from '@xyflow/react';
 import { X } from 'lucide-react';
 
 interface MiniMapPanelProps {
@@ -14,33 +14,69 @@ interface MiniMapPanelProps {
 }
 
 export default function MiniMapPanel({ isOpen, onToggle }: MiniMapPanelProps) {
+  if (!isOpen) return null;
+
   return (
     <>
-      {/* 小地图面板 - 显示在右下角上方 */}
-      {isOpen && (
-        <div className="absolute bottom-20 right-4 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-gray-200/50 dark:border-gray-700/50 shadow-xl rounded-lg p-2 animate-fade-in">
-          <div className="flex items-center justify-between mb-1.5 px-1">
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-              全局预览
-            </span>
-            <button
-              onClick={onToggle}
-              className="p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <X className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
-            </button>
-          </div>
-          <MiniMap
-            className="!bg-gray-100/80 dark:!bg-gray-900/80 !border-0 !rounded-md overflow-hidden"
-            style={{ width: 200, height: 150 }}
-            nodeColor={() => '#137fec'}
-            maskColor="rgba(0, 0, 0, 0)"
-            pannable
-            zoomable
-            zoomStep={10}
-          />
-        </div>
-      )}
+      {/* 关闭按钮 - 嵌在小窗右上角 */}
+      <Panel position="bottom-right" className="!bottom-[232px] !right-[25px] !m-0 !z-50">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }}
+          className="p-0.5 rounded bg-white/90 dark:bg-gray-700/90 hover:bg-red-50 dark:hover:bg-red-900/50 transition-colors border border-gray-200 dark:border-gray-600 hover:border-red-300 dark:hover:border-red-700"
+          style={{
+            width: '20px',
+            height: '20px',
+          }}
+          title="关闭预览"
+        >
+          <X className="w-4 h-4 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400" />
+        </button>
+      </Panel>
+
+      {/* MiniMap 组件 - 不能被包裹，直接渲染 */}
+      <MiniMap
+        position="bottom-right"
+        className="!bg-gray-50 dark:!bg-[#0a0e14] !border !border-gray-200/50 dark:!border-gray-700/50 !shadow-xl !rounded-lg"
+        style={{ 
+          width: 240, 
+          height: 180,
+          bottom: 55,  // 调整位置，避免被按钮挡住
+          right: 16,
+        }}
+        nodeColor={(node) => {
+          // 动态获取当前主题
+          const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+          
+          // 使用更明显的颜色，让卡片在小地图中清晰可见
+          // 浅色模式：深灰色卡片在浅色背景上
+          // 深色模式：浅色卡片在深色背景上
+          if (isDark) {
+            return 'rgba(148, 163, 184, 0.9)'; // 深色模式 - 浅灰色卡片，与深色背景形成对比
+          }
+          return 'rgba(71, 85, 105, 0.8)'; // 浅色模式 - 深灰色卡片，与浅色背景形成对比
+        }}
+        nodeStrokeColor={(node) => {
+          const isDark = typeof window !== 'undefined' && document.documentElement.classList.contains('dark');
+          
+          // 边框颜色 - 使卡片更清晰
+          if (isDark) {
+            return 'rgba(226, 232, 240, 0.6)'; // 深色模式 - 更亮的边框
+          }
+          return 'rgba(30, 41, 59, 0.6)'; // 浅色模式 - 更深的边框
+        }}
+        nodeStrokeWidth={2}  // 增加边框宽度，让卡片更明显
+        maskColor="rgba(19, 127, 236, 0.2)" // 当前视图区域的遮罩，使用主题蓝色
+        pannable={true}  // 允许在小地图上拖动视图
+        zoomable={true}  // 允许在小地图上使用鼠标滚轮缩放
+        zoomStep={10}  // 缩放步进
+        // 连线样式配置
+        nodeClassName={() => ''}  // 清除默认类名
+        maskStrokeColor="rgba(19, 127, 236, 0.8)"  // 当前视图区域边框颜色
+        maskStrokeWidth={2}  // 当前视图区域边框宽度
+      />
     </>
   );
 }

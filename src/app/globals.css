@@ -350,3 +350,31 @@ html.dark .card-content blockquote {
     background-color: rgb(107 114 128);
   }
 }
+
+/* React Flow MiniMap - 显示连线 */
+.react-flow__minimap svg {
+  /* 确保 SVG 内容可见 */
+  overflow: visible !important;
+}
+
+/* MiniMap 中的连线样式 */
+.react-flow__minimap .react-flow__edges {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.react-flow__minimap .react-flow__edge path {
+  stroke: #137fec !important;
+  stroke-width: 2 !important;
+  opacity: 0.8 !important;
+}
+
+/* MiniMap 中的箭头 */
+.react-flow__minimap .react-flow__edge-path {
+  stroke: #137fec !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__minimap marker {
+  fill: #137fec !important;
+}

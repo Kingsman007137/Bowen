@@ -49,21 +49,29 @@ function CardNode({ data }: NodeProps<CardNodeType>) {
             />
           </div>
           
-          {/* 操作按钮 - 悬停显示 */}
-          <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+          {/* 操作按钮 - 悬停显示，嵌在卡片右上角 */}
+          <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
             <button
               onClick={handleEdit}
-              className="p-1.5 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform"
+              className="p-1 rounded bg-primary/90 text-white hover:bg-primary transition-colors border border-white/20"
+              style={{
+                width: '28px',
+                height: '28px',
+              }}
               title="编辑"
             >
-              <Pencil className="w-3.5 h-3.5" />
+              <Pencil className="w-4 h-4" />
             </button>
             <button
               onClick={handleDelete}
-              className="p-1.5 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform"
+              className="p-1 rounded bg-red-500/90 text-white hover:bg-red-600 transition-colors border border-white/20"
+              style={{
+                width: '28px',
+                height: '28px',
+              }}
               title="删除"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4" />
             </button>
           </div>
         </div>
